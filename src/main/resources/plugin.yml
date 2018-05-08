@@ -1,0 +1,8 @@
+name: JetEngine
+version: @version@
+description: Runs the JetEngine server.
+authors: [UberPilot]
+website: https://github.com/UberPilot/JetEngine
+
+main: me.uberpilot.jetengine.JetEngine
+commands:
