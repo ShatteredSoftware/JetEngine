@@ -39,21 +39,13 @@ public abstract class JPlugin extends JavaPlugin
         this.messages.addMessage(new Message(getName() + "_cmd." + this.getName().toLowerCase() + ".feature_name", "/" + getName().toLowerCase()));
 
         //Create and register the Info command.
-        Command info = new Command
-                (
-                        this, null, this.getName().toLowerCase(),
-                        (sender, label, args) ->
-                        {
-                            messenger.sendMessage
-                                    (
-                                            sender, "info",
-                                            this.getName(), this.authors,
-                                            this.getDescription().getVersion(),
-                                            this.getDescription().getWebsite()
-                                    );
-                            return true;
-                        }
-                );
+        Command info = new Command(this, null, this.getName().toLowerCase(), (sender, label, args) ->
+        {
+            messenger.sendMessage(sender, "info", this.getName(), this.authors,
+                    this.getDescription().getVersion(),
+                    this.getDescription().getWebsite());
+            return true;
+        });
         commands.put(this.getName().toLowerCase(), info);
     }
 
