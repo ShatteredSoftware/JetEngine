@@ -133,4 +133,17 @@ public class Command extends BukkitCommand implements CommandExecutor
     {
         return description;
     }
+
+    public void addChild(Command command)
+    {
+        this.children.put(command.getLabel(), command);
+    }
+
+    public void addChildren(Command... commands)
+    {
+        for(Command command : commands)
+        {
+            addChild(command);
+        }
+    }
 }

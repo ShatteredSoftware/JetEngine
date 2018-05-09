@@ -36,8 +36,8 @@ public abstract class JPlugin extends JavaPlugin
         this.messages.addMessage(new Message("help_line", "$pc%s $sc- $pc%s"));
         this.messages.addMessage(new Message("help_header", "$scHelp for $pc%s$sc:"));
         this.messages.addMessage(new Message("info", "$pc%s $scby $pc%s\n$pcVersion: $sc%s\n$pcWebsite: $sc%s"));
-        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".desc", "Gives information about the plugin."));
-        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".feature_name", "/" + getName().toLowerCase()));
+        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".feature_name", "/" + name.toLowerCase()));
 
         //Create and register the Info command.
         Command info = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
@@ -47,7 +47,18 @@ public abstract class JPlugin extends JavaPlugin
                     this.getDescription().getWebsite());
             return true;
         });
+
+        Command help = new Command(this, info, "help", (sender, label, args) ->
+        {
+            for(Command command : commands.values())
+            {
+                messenger.sendMessage(sender, "help_line", command.getLabel(), command.getDescription());
+            }
+            return true;
+        });
+        info.addChild(help);
         commands.put(this.getName().toLowerCase(), info);
+
     }
 
     protected void preEnable() {}
@@ -75,7 +86,7 @@ public abstract class JPlugin extends JavaPlugin
         }
     }
 
-    public void registerCommand(Command command)
+    protected void registerCommand(Command command)
     {
         commandMap.register(command.getLabel(), command);
     }
