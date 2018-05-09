@@ -4,6 +4,6 @@ public class JetEngine extends JPlugin
 {
     public JetEngine()
     {
-        super();
+        super("JetEngine");
     }
 }

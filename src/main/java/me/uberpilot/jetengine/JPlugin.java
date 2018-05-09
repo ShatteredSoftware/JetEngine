@@ -20,7 +20,7 @@ public abstract class JPlugin extends JavaPlugin
 
     private final String authors;
 
-    public JPlugin()
+    protected JPlugin(String name)
     {
         super();
         this.messages = new MessageSet(this);
@@ -31,18 +31,18 @@ public abstract class JPlugin extends JavaPlugin
 
         this.authors = JUtilities.punctuateList(this.getDescription().getAuthors());
 
-        this.messages.addMessage(new Message("prefix", "$sc[$pc" + getName().toLowerCase() + "$sc]"));
-        this.messages.addMessage(new Message("no_permission", "&cYou don't have permission to use %s"));
+        this.messages.addMessage(new Message("prefix", "$sc[$pc" + name + "$sc]"));
+        this.messages.addMessage(new Message("no_permission", "$pre &cYou don't have permission to use %s"));
         this.messages.addMessage(new Message("help_line", "$pc%s $sc- $pc%s"));
         this.messages.addMessage(new Message("help_header", "$scHelp for $pc%s$sc:"));
-        this.messages.addMessage(new Message("info", "$pc%s $scby $pc%s\n$scVersion: %s\n$scWebsite: %s"));
-        this.messages.addMessage(new Message(getName() + "_cmd." + this.getName().toLowerCase() + ".desc", "Gives information about the plugin."));
-        this.messages.addMessage(new Message(getName() + "_cmd." + this.getName().toLowerCase() + ".feature_name", "/" + getName().toLowerCase()));
+        this.messages.addMessage(new Message("info", "$pc%s $scby $pc%s\n$pcVersion: $sc%s\n$pcWebsite: $sc%s"));
+        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".desc", "Gives information about the plugin."));
+        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".feature_name", "/" + getName().toLowerCase()));
 
         //Create and register the Info command.
-        Command info = new Command(this, null, this.getName().toLowerCase(), (sender, label, args) ->
+        Command info = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
         {
-            messenger.sendMessage(sender, "info", this.getName(), this.authors,
+            messenger.sendMessage(sender, "info", name, this.authors,
                     this.getDescription().getVersion(),
                     this.getDescription().getWebsite());
             return true;
