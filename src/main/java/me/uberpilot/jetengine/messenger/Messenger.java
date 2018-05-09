@@ -56,12 +56,12 @@ public class Messenger
 
     public void sendCommandHelp(CommandSender sender, Command command)
     {
-        sendMessage(sender, "help_header", plugin.getName(), command.getLabel());
+        sendMessage(sender, "core.cmd_help_header", plugin.getName(), command.getLabel());
         for(HashMap.Entry<String, Command> entry : command.getChildren().entrySet())
         {
             if(sender.hasPermission(entry.getValue().getPermission()))
             {
-                sendMessage(sender, "help_line", entry.getValue().getLabel(), entry.getValue().getDescription());
+                sendMessage(sender, "core.help_line", command.getPath(' ') + " " + entry.getValue().getLabel(), entry.getValue().getDescription());
             }
         }
     }

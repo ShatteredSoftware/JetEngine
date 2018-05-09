@@ -4,6 +4,7 @@ import me.uberpilot.jetengine.JPlugin;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Represents a set of messages for a plugin.
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * @version 1.0
  * @since 1.0
  */
-public class MessageSet
+public class MessageSet implements Iterable<Message>
 {
     /** A link to the parent plugin. */
     private transient JPlugin plugin;
@@ -98,6 +99,7 @@ public class MessageSet
     public String getMessage(String id, Object... vars)
     {
         Message m = messages.get(id);
+        if(m == null) throw new IllegalArgumentException("Invalid message: " + id);
         String message = String.format(m.get(), vars)
             .replaceAll("\\$pc", primaryColor)
             .replaceAll("\\$sc", secondaryColor)
@@ -118,6 +120,16 @@ public class MessageSet
     {
         Message m = messages.get(id);
         return m.get();
+    }
+
+    /**
+     * Checks whether a message exists in this set.
+     * @param id The ID of the message to be checked.
+     * @return True if this message exists in this set, false otherwise.
+     */
+    public boolean hasMessage(String id)
+    {
+        return messages.containsKey(id);
     }
 
     /**
@@ -150,5 +162,11 @@ public class MessageSet
     public String getTertiaryColor()
     {
         return tertiaryColor;
+    }
+
+    @Override
+    public Iterator<Message> iterator()
+    {
+        return messages.values().iterator();
     }
 }

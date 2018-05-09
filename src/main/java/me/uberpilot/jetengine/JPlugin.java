@@ -17,8 +17,12 @@ public abstract class JPlugin extends JavaPlugin
     protected Messenger messenger;
     protected HashMap<String, Command> commands;
     private CommandMap commandMap;
+    protected boolean debug = false;
 
     private final String authors;
+
+    protected Command baseCommand;
+    protected Command helpCommand;
 
     protected JPlugin(String name)
     {
@@ -31,34 +35,39 @@ public abstract class JPlugin extends JavaPlugin
 
         this.authors = JUtilities.punctuateList(this.getDescription().getAuthors());
 
-        this.messages.addMessage(new Message("prefix", "$sc[$pc" + name + "$sc]"));
-        this.messages.addMessage(new Message("no_permission", "$pre &cYou don't have permission to use %s"));
-        this.messages.addMessage(new Message("help_line", "$pc%s $sc- $pc%s"));
-        this.messages.addMessage(new Message("help_header", "$scHelp for $pc%s$sc:"));
-        this.messages.addMessage(new Message("info", "$pc%s $scby $pc%s\n$pcVersion: $sc%s\n$pcWebsite: $sc%s"));
-        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(getName() + "_cmd." + name.toLowerCase() + ".feature_name", "/" + name.toLowerCase()));
+        this.messages.addMessage(new Message("core.prefix", "$sc[$pc" + name + "$sc]"));
+        this.messages.addMessage(new Message("core.no_permission", "$pre &cYou don't have permission to use %s"));
+        this.messages.addMessage(new Message("core.invalid_args", "$pre &cInvalid argument."));
+        this.messages.addMessage(new Message("core.help_line", "  $pc/%s $tc- $sc%s"));
+        this.messages.addMessage(new Message("core.help_header", "$scHelp for $pc%s$sc:"));
+        this.messages.addMessage(new Message("core.cmd_help_header", "$sc%s Help$tc - $pc/%s"));
+        this.messages.addMessage(new Message("core.info",
+                "$tc&m--------------------------------------\n" +
+                "$pc%s-%s $scby $pc%s\n" +
+                "$tc&m--------------------------------------\n" +
+                "$pcWebsite$tc: $sc%s\n" +
+                "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help.desc", "Gives a list of commands from " + name + "."));
+
 
         //Create and register the Info command.
-        Command info = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
+        baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
         {
-            messenger.sendMessage(sender, "info", name, this.authors,
-                    this.getDescription().getVersion(),
-                    this.getDescription().getWebsite());
+            messenger.sendMessage(sender, "core.info", name, this.getDescription().getVersion(), this.authors, this.getDescription().getWebsite());
             return true;
         });
 
-        Command help = new Command(this, info, "help", (sender, label, args) ->
+        helpCommand = new Command(this, baseCommand, "help", (sender, label, args) ->
         {
+            messenger.sendMessage(sender, "core.help_header", name);
             for(Command command : commands.values())
             {
-                messenger.sendMessage(sender, "help_line", command.getLabel(), command.getDescription());
+                messenger.sendMessage(sender, "core.help_line", command.getLabel(), command.getDescription());
             }
             return true;
         });
-        info.addChild(help);
-        commands.put(this.getName().toLowerCase(), info);
-
+        commands.put(name.toLowerCase(), baseCommand);
     }
 
     protected void preEnable() {}
@@ -67,6 +76,18 @@ public abstract class JPlugin extends JavaPlugin
     public void onEnable()
     {
         preEnable();
+        //Read Messages from the messages.yml internal file
+        //FIXME: Broke.
+//        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(this.getClass().getResourceAsStream("messages.yml")));
+//
+//        for(Message m : messages)
+//        {
+//            if(cfg.contains(m.getId()))
+//            {
+//                m.set(cfg.getString(m.getId(), m.get()));
+//            }
+//        }
+
         //Reflection shenanigans to register commands.
         try
         {
@@ -75,9 +96,17 @@ public abstract class JPlugin extends JavaPlugin
             cmdMap.setAccessible(true);
             commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
 
-            for(HashMap.Entry<String, Command> entry : commands.entrySet())
+            for(Command command : commands.values())
             {
-                commandMap.register(entry.getKey(), entry.getValue());
+                //Build child commands.
+                StringBuilder children = new StringBuilder(" {");
+                for(Command child : command.getChildren().values())
+                    children.append(child.getLabel()).append(", ");
+                children.delete(children.length() - 2, children.length()).append("}");
+                //Show this and children.
+                if(debug)
+                    getLogger().info("Registerring command /" + command.getLabel() + children.toString());
+                commandMap.register(command.getLabel(), command);
             }
         }
         catch (NoSuchFieldException | IllegalAccessException e)
