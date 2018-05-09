@@ -102,7 +102,7 @@ public class MessageSet
             .replaceAll("\\$pc", primaryColor)
             .replaceAll("\\$sc", secondaryColor)
             .replaceAll("\\$tc", tertiaryColor);
-        if(!id.equals("prefix"))
+        if(messages.containsKey("prefix") && !id.equals("prefix"))
         {
             message = message.replaceAll("\\$pre", getMessage("prefix"));
         }
