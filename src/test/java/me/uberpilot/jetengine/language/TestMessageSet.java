@@ -25,10 +25,11 @@ public class TestMessageSet
 
         set = new MessageSet(plugin);
         setColors = new MessageSet(plugin, ChatColor.DARK_RED.toString(), ChatColor.RED.toString(), ChatColor.DARK_GRAY.toString());
+
         set.addMessage(new Message("prefix",""));
-        setColors.addMessage(new Message("prefix",""));
         set.addMessage(new Message("greeting", "$scHello, $pc%s$sc!", "$scHello null!"));
         set.addMessage(new Message("def_msg", "", "$scWelcome to $pcjetSuite$sc!"));
+        setColors.addMessage(new Message("prefix",""));
         setColors.addMessage(new Message("greeting", "$scHello, $pc%s$sc!", "$scHello null!"));
         setColors.addMessage(new Message("def_msg", "", "$scWelcome to $pcjetSuite$sc!"));
     }

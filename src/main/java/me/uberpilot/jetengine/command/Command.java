@@ -1,13 +1,17 @@
 package me.uberpilot.jetengine.command;
 
 import me.uberpilot.jetengine.JPlugin;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class Command extends BukkitCommand
+/**
+ * Represents a command and information attached to it.
+ */
+public class Command extends BukkitCommand implements CommandExecutor
 {
     /** Link to the plugin this belongs to. */
     private JPlugin plugin;
@@ -112,6 +116,12 @@ public class Command extends BukkitCommand
 
         sendNoPermissionMessage(sender);
         return true;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String label, String[] args)
+    {
+        return execute(commandSender, label, args);
     }
 
     public String getPermission()

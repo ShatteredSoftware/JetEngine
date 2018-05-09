@@ -16,6 +16,7 @@ public abstract class JPlugin extends JavaPlugin
     protected MessageSet messages;
     protected Messenger messenger;
     protected HashMap<String, Command> commands;
+    private CommandMap commandMap;
 
     private final String authors;
 
@@ -61,17 +62,22 @@ public abstract class JPlugin extends JavaPlugin
             final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
             cmdMap.setAccessible(true);
-            CommandMap map = (CommandMap) cmdMap.get(Bukkit.getServer());
+            commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
 
             for(HashMap.Entry<String, Command> entry : commands.entrySet())
             {
-                map.register(entry.getKey(), entry.getValue());
+                commandMap.register(entry.getKey(), entry.getValue());
             }
         }
         catch (NoSuchFieldException | IllegalAccessException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void registerCommand(Command command)
+    {
+        commandMap.register(command.getLabel(), command);
     }
 
     public MessageSet getMessages()
