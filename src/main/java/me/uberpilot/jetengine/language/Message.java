@@ -1,7 +1,5 @@
 package me.uberpilot.jetengine.language;
 
-import org.bukkit.ChatColor;
-
 public class Message
 {
     private String id;
@@ -37,7 +35,7 @@ public class Message
      */
     public String get()
     {
-        return ChatColor.translateAlternateColorCodes('&', (value != null && value.length() > 0) ? value : def);
+        return (value != null && value.length() > 0) ? value : def;
     }
 
     /**
@@ -46,7 +44,7 @@ public class Message
      */
     public String getOrDef(String def)
     {
-        return ChatColor.translateAlternateColorCodes('&', (value != null && value.length() > 0) ? value : def);
+        return (value != null && value.length() > 0) ? value : def;
     }
 
     public String getId()

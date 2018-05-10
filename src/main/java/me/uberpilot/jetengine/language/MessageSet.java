@@ -104,9 +104,10 @@ public class MessageSet implements Iterable<Message>
             .replaceAll("\\$pc", primaryColor)
             .replaceAll("\\$sc", secondaryColor)
             .replaceAll("\\$tc", tertiaryColor);
-        if(messages.containsKey("prefix") && !id.equals("prefix"))
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        if(messages.containsKey("core.prefix") && !id.equals("core.prefix"))
         {
-            message = message.replaceAll("\\$pre", getMessage("prefix"));
+            message = message.replaceAll("\\$pre", getMessage("core.prefix"));
         }
         return message;
     }
@@ -118,8 +119,7 @@ public class MessageSet implements Iterable<Message>
      */
     public String getRawMessage(String id)
     {
-        Message m = messages.get(id);
-        return m.get();
+        return messages.get(id).get();
     }
 
     /**
@@ -130,14 +130,6 @@ public class MessageSet implements Iterable<Message>
     public boolean hasMessage(String id)
     {
         return messages.containsKey(id);
-    }
-
-    /**
-     * @return Linked {@link #plugin parent plugin} for this MessageSet.
-     */
-    public JPlugin getPlugin()
-    {
-        return plugin;
     }
 
     /**
@@ -164,9 +156,29 @@ public class MessageSet implements Iterable<Message>
         return tertiaryColor;
     }
 
+    public void setPrimaryColor(String primaryColor)
+    {
+        this.primaryColor = primaryColor;
+    }
+
+    public void setSecondaryColor(String secondaryColor)
+    {
+        this.secondaryColor = secondaryColor;
+    }
+
+    public void setTertiaryColor(String tertiaryColor)
+    {
+        this.tertiaryColor = tertiaryColor;
+    }
+
     @Override
     public Iterator<Message> iterator()
     {
         return messages.values().iterator();
+    }
+
+    public void clear()
+    {
+        this.messages.clear();
     }
 }

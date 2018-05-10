@@ -72,13 +72,13 @@ public class Command extends BukkitCommand implements CommandExecutor
         //Default handling for feature name.
         if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", '/' + this.getLabel()));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", '/' + (parent != null ? parent.getPath(' ') : "") + this.getLabel()));
         }
         this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
 
         //Hook this to the parent.
         if(parent != null)
-            this.parent.addChild(this);
+            this.getParent().addChild(this);
     }
 
     private String getPath(String separator)
@@ -91,16 +91,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
     }
 
-    /* _cmd:
-     *   ping:
-     *     desc: 'Sends a ''Pong!'' message.'
-     *     # You don't have permission to use %feature_name%
-     *     # You are not allowed to use %feature_name%
-     *     # You are allowed to use %feature_name%
-     *     # etc.
-     *     feature_name: '/ping'
-     *
-     */
+
 
     public void sendNoPermissionMessage(CommandSender sender)
     {
@@ -110,11 +101,6 @@ public class Command extends BukkitCommand implements CommandExecutor
     public void sendCommandHelp(CommandSender sender)
     {
         plugin.getMessenger().sendCommandHelp(sender, this);
-    }
-
-    public JPlugin getPlugin()
-    {
-        return plugin;
     }
 
     public Command getParent()

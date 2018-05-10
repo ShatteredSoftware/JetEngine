@@ -9,6 +9,11 @@ public class JetEngine extends JPlugin
     {
         super("JetEngine");
         super.debug = true;
+    }
+
+    @Override
+    protected void preEnable()
+    {
         messages.addMessage(new Message("message_item", "&f%s $tc- $sc%s"));
 
         Command list = new Command(this, helpCommand, "list", ((sender, label, args) ->
@@ -19,5 +24,11 @@ public class JetEngine extends JPlugin
             }
             return true;
         }));
+    }
+
+    @Override
+    protected void postDisable()
+    {
+
     }
 }
