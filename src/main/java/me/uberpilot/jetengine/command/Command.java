@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Represents a command and information attached to it.
  */
-//TODO: Make this not extend BukkitCommand, but make it create a BukkitCommand as needed.
 public class Command extends BukkitCommand implements CommandExecutor
 {
     private final String messagePath;
@@ -23,8 +22,6 @@ public class Command extends BukkitCommand implements CommandExecutor
 
     /** Parent command. */
     private Command parent;
-
-    private BukkitCommand bukkit;
 
     /** Child commands. */
     private HashMap<String, Command> children;
@@ -43,7 +40,6 @@ public class Command extends BukkitCommand implements CommandExecutor
     private String description;
 
     private JCommandExecutor executor;
-    private List<String> aliases;
 
     public Command(JPlugin plugin, Command parent, String label, JCommandExecutor executor)
     {
@@ -94,12 +90,12 @@ public class Command extends BukkitCommand implements CommandExecutor
 
 
 
-    public void sendNoPermissionMessage(CommandSender sender)
+    private void sendNoPermissionMessage(CommandSender sender)
     {
         plugin.getMessenger().sendErrorMessage(sender, "core.no_permission", this.feature_name);
     }
 
-    public void sendCommandHelp(CommandSender sender)
+    private void sendCommandHelp(CommandSender sender)
     {
         plugin.getMessenger().sendCommandHelp(sender, this);
     }
