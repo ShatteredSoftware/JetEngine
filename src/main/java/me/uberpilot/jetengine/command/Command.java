@@ -17,6 +17,7 @@ import java.util.List;
 //TODO: Make this not extend BukkitCommand, but make it create a BukkitCommand as needed.
 public class Command extends BukkitCommand implements CommandExecutor
 {
+    private final String messagePath;
     /** Link to the plugin this belongs to. */
     private JPlugin plugin;
 
@@ -60,7 +61,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.children = new HashMap<>();
 
         this.permission = plugin.getName().toLowerCase() + '.' + (parent != null ? (parent.getPermission() + '.') : "") + label.toLowerCase();
-        String messagePath = plugin.getName().toLowerCase() + "_cmd." + (parent != null ? parent.getPath('_') : "") + label.toLowerCase();
+        messagePath = plugin.getName().toLowerCase() + "_cmd." + (parent != null ? parent.getPath('_') : "") + label.toLowerCase();
 
         //Default handling for description.
         if (!plugin.getMessages().hasMessage(messagePath + ".desc"))
@@ -192,5 +193,13 @@ public class Command extends BukkitCommand implements CommandExecutor
         {
             addChild(command);
         }
+    }
+
+    @Override
+    public org.bukkit.command.Command setDescription(String description)
+    {
+        this.description = description;
+        plugin.getMessages().set(messagePath + ".desc", description);
+        return this;
     }
 }

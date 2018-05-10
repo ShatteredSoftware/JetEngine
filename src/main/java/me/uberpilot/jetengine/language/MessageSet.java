@@ -132,6 +132,11 @@ public class MessageSet implements Iterable<Message>
         return messages.containsKey(id);
     }
 
+    public void set(String id, String value)
+    {
+        messages.get(id).set(value);
+    }
+
     /**
      * @return The {@link #primaryColor Primary Color} for this MessageSet.
      */
