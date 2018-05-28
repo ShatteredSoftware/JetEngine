@@ -63,18 +63,6 @@ public abstract class JPlugin extends JavaPlugin
         this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
         this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help.desc", "Gives a list of commands from " + name + "."));
 
-        //Load messages from files.
-        YamlConfiguration cfg;
-        File ext = new File(getDataFolder(), "messages.yml");
-        if(ext.exists())
-            cfg = YamlConfiguration.loadConfiguration(ext);
-        else
-            cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
-
-        for(Message m : messages)
-            if(cfg.contains(m.getId()))
-                m.set(cfg.getString(m.getId(), m.get()));
-
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
         {
@@ -108,8 +96,18 @@ public abstract class JPlugin extends JavaPlugin
         init(this.name);
 
         preEnable();
-        //Read Messages from the messages.yml internal file
-        //FIXME: Broke.
+
+        //Load messages from files.
+        YamlConfiguration cfg;
+        File ext = new File(getDataFolder(), "messages.yml");
+        if(ext.exists())
+            cfg = YamlConfiguration.loadConfiguration(ext);
+        else
+            cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
+
+        for(Message m : messages)
+            if(cfg.contains(m.getId()))
+                m.set(cfg.getString(m.getId(), m.get()));
 
         //Reflection shenanigans to register commands.
         try
