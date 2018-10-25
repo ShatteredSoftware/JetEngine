@@ -26,4 +26,14 @@ public class JUtilities
         }
         return builder.toString();
     }
+
+    /**
+     * Utility method to check if a string is empty or null.
+     * @param string String to be checked.
+     * @return Boolean. Whether the string is empty or null.
+     */
+    public static boolean isEmptyOrNull(String string)
+    {
+        return string == null || string.isEmpty();
+    }
 }
