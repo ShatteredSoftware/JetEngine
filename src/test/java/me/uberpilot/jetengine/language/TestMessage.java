@@ -24,21 +24,21 @@ public class TestMessage
     @Test
     public void testMessageValid()
     {
-        Assert.assertEquals("Get Value, Valid", "\u00a76Hello World!", message.get());
+        Assert.assertEquals("Get Value, Valid", "&6Hello World!", message.get());
     }
 
     @Test
     public void testMessageEmpty()
     {
-        Assert.assertEquals("Get Value, Empty", "\u00a7eHello World!", defMessageEmpty.get());
-        Assert.assertEquals("Get Value, Empty Default", "\u00a78Hello!", defMessageEmpty.getOrDef("&8Hello!"));
+        Assert.assertEquals("Get Value, Empty", "&eHello World!", defMessageEmpty.get());
+        Assert.assertEquals("Get Value, Empty Default", "&8Hello!", defMessageEmpty.getOrDef("&8Hello!"));
     }
 
     @Test
     public void testMessageNull()
     {
-        Assert.assertEquals("Get Value, Null", "\u00a7aHello World!", defMessageNull.get());
-        Assert.assertEquals("Get Value, Null Default", "\u00a78Hello!", defMessageNull.getOrDef("&8Hello!"));
+        Assert.assertEquals("Get Value, Null", "&aHello World!", defMessageNull.get());
+        Assert.assertEquals("Get Value, Null Default", "&8Hello!", defMessageNull.getOrDef("&8Hello!"));
     }
 
 }
