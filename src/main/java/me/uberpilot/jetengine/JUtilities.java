@@ -2,10 +2,21 @@ package me.uberpilot.jetengine;
 
 import java.util.List;
 
-public class JUtilities
+/**
+ * A class of general utilities for use in JetEngine plugins. 
+ * @author Hunter Henrichsen
+ * @since 1.1
+ */
+public final class JUtilities
 {
     protected JUtilities() {}
 
+    /**
+     * Punctuates a list of strings with commas and 'and.'
+     * TODO: Update to take a language string, rather than hard-coding the 'and'.
+     * @param list The list of strings to punctuate.
+     * @return A single punctuated string.
+     */
     public static String punctuateList(List<? extends String> list)
     {
         StringBuilder builder = new StringBuilder();
