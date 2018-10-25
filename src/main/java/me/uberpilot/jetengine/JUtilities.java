@@ -7,6 +7,7 @@ import java.util.List;
  * @author Hunter Henrichsen
  * @since 1.1
  */
+@SuppressWarnings("WeakerAccess")
 public final class JUtilities
 {
     protected JUtilities() {}
