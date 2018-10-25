@@ -19,6 +19,9 @@ public final class JUtilities
      */
     public static String punctuateList(List<? extends String> list)
     {
+        if(list == null)
+            return "";
+
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < list.size(); i++)
         {
