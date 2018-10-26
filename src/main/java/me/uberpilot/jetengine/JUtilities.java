@@ -12,13 +12,17 @@ public final class JUtilities
 {
     protected JUtilities() {}
 
+    public static String punctuateList(List<? extends String> list)
+    {
+        return punctuateList(list, ",", "and");
+    }
+
     /**
      * Punctuates a list of strings with commas and 'and.'
-     * TODO: Update to take a language string, rather than hard-coding the 'and'.
      * @param list The list of strings to punctuate.
      * @return A single punctuated string.
      */
-    public static String punctuateList(List<? extends String> list)
+    public static String punctuateList(List<? extends String> list, String separator, String and)
     {
         if(list == null)
             return "";
@@ -31,11 +35,11 @@ public final class JUtilities
             {
                 if(i != list.size() - 2)
                 {
-                    builder.append(", ");
+                    builder.append(separator).append(" ");
                 }
                 else
                 {
-                    builder.append(", and ");
+                    builder.append(separator).append(" ").append(and).append(" ");
                 }
             }
         }

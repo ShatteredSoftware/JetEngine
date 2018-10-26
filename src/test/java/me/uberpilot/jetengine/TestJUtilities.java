@@ -15,6 +15,7 @@ public class TestJUtilities {
     private ArrayList<String> nullList;
     private ArrayList<String> emptyStrings;
     private ArrayList<String> strings;
+    private ArrayList<String> langStrings;
 
     @Before
     public void setUp()
@@ -25,6 +26,7 @@ public class TestJUtilities {
         nullList = null;
         emptyStrings = new ArrayList<>();
         strings = new ArrayList<>(Arrays.asList("Thing 1", "Thing 2", "Thing 3"));
+        langStrings = new ArrayList<>(Arrays.asList("Cosa 1", "Cosa 2", "Cosa 3"));
     }
 
     @Test
@@ -33,6 +35,7 @@ public class TestJUtilities {
         Assert.assertEquals("Expect empty string for null list to punctuate.",  "", JUtilities.punctuateList(nullList));
         Assert.assertEquals("Expect empty string for empty list to punctuate.",  "", JUtilities.punctuateList(emptyStrings));
         Assert.assertEquals("Expect properly punctuated list.", "Thing 1, Thing 2, and Thing 3", JUtilities.punctuateList(strings));
+        Assert.assertEquals("Expect properly punctuated translated list.", "Cosa 1, Cosa 2, y Cosa 3", JUtilities.punctuateList(langStrings, ",", "y"));
     }
 
     @Test

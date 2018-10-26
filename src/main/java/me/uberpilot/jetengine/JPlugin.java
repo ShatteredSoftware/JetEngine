@@ -22,7 +22,7 @@ public abstract class JPlugin extends JavaPlugin
     private CommandMap commandMap;
     protected boolean debug = false;
 
-    private final String authors;
+    private String authors;
     private final String name;
 
     protected Command baseCommand;
@@ -36,9 +36,6 @@ public abstract class JPlugin extends JavaPlugin
         this.messenger = new Messenger(this, messages);
         this.commands = new HashMap<>();
 
-        //Prettify the Authors String for the Info Command, but only do it once.
-
-        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors());
 
         this.name = name;
     }
@@ -60,6 +57,8 @@ public abstract class JPlugin extends JavaPlugin
                         "$tc&m--------------------------------------\n" +
                         "$pcWebsite$tc: $sc%s\n" +
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
+        this.messages.addMessage(new Message("core.list_separator", ","));
+        this.messages.addMessage(new Message("core.list_and", "and"));
         this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
         this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help.desc", "Gives a list of commands from " + name + "."));
 
@@ -136,6 +135,10 @@ public abstract class JPlugin extends JavaPlugin
         {
             e.printStackTrace();
         }
+
+        //Prettify the Authors String for the Info Command, but only do it once.
+        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(),
+                messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
     }
 
     protected void postDisable() {}
