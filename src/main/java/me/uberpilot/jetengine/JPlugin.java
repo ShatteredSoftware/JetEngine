@@ -151,9 +151,23 @@ public abstract class JPlugin extends JavaPlugin
         postDisable();
     }
 
-    protected void registerCommand(Command command)
+    protected void registerCommand(Command command) throws IllegalArgumentException
     {
-        commandMap.register(command.getLabel(), command);
+        if(command == null) throw new IllegalArgumentException("Command cannot be null.");
+
+        try
+        {
+            final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+            cmdMap.setAccessible(true);
+            commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
+
+            commandMap.register(command.getLabel(), command);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public MessageSet getMessages()
