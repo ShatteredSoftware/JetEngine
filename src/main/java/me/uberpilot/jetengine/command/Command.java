@@ -88,8 +88,6 @@ public class Command extends BukkitCommand implements CommandExecutor
         return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
     }
 
-
-
     private void sendNoPermissionMessage(CommandSender sender)
     {
         plugin.getMessenger().sendErrorMessage(sender, "core.no_permission", this.feature_name);
@@ -175,7 +173,9 @@ public class Command extends BukkitCommand implements CommandExecutor
         ArrayList<String> completions = new ArrayList<>();
         for(Command child : children.values())
         {
-            if(sender.hasPermission(child.getPermission()))
+            if(sender.hasPermission(child.getPermission())
+                    && (child.getLabel().startsWith(args[args.length - 1]))
+                    || child.getAliases().stream().anyMatch((s) -> s.startsWith(args[args.length - 1])))
             {
                 completions.add(child.getLabel());
             }

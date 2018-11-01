@@ -1,8 +1,7 @@
 name: JetEngine
 version: @version@
-description: Runs the JetEngine server.
+description: Core for JetSuite plugins.
 authors: [UberPilot]
 website: https://github.com/UberPilot/JetEngine
 
 main: me.uberpilot.jetengine.JetEngine
-commands:

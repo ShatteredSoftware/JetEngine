@@ -20,6 +20,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'idea-utils'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 //apply plugin: 'findbugs'
 
 idea {
@@ -58,6 +60,16 @@ dependencies {
     // compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.property("group")
+            artifactId = project.property("name")
+            version = project.property("version")
+        }
+    }
+}
+
 processResources {
     filter ReplaceTokens, tokens: [
             "apiversion": project.property("apiversion"),
@@ -82,6 +94,7 @@ jar {
 }
 
 shadowJar {
+    shadowJar.archiveName = "JetEngine-${version}.jar"
     dependencies {
         exclude(dependency('org.spigotmc:spigot-api:.*'))
         exclude(dependency('org.spigotmc:spigot:.*'))
