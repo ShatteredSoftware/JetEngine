@@ -28,7 +28,7 @@ public class TestCommand
     CommandSender root;
     @Mock
     CommandSender noPerm;
-    private Command command, child;
+    private Command command, child, child2, child3;
     private static final String name = "TestPlugin";
 
     @Before
@@ -53,8 +53,8 @@ public class TestCommand
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
         messages.addMessage(new Message("core.list_separator", ","));
         messages.addMessage(new Message("core.list_and", "and"));
-        messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
-        messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help.desc", "Gives a list of commands from " + name + "."));
+        messages.addMessage(new Message(name.toLowerCase() + "_cmd.test", "Gives basic information about " + name + "."));
+        messages.addMessage(new Message(name.toLowerCase() + "_cmd.help", "Gives a list of commands from " + name + "."));
 
         plugin = PowerMockito.mock(JPlugin.class);
         when(plugin.getMessages()).thenReturn(messages);
@@ -71,16 +71,28 @@ public class TestCommand
         command = new Command(plugin, null, "test", ((sender, label, args) -> true));
 
         child = new Command(plugin, command, "fail", ((sender, label, args) -> false));
+
+        child2 = new Command(plugin, null, "one", ((sender, label, args) -> false));
+        child3 = new Command(plugin, null, "two", ((sender, label, args) -> false));
+
+        command.addChildren(child2, child3);
+
+        child3.setDescription("Something else");
     }
 
     @Test
     public void testCommandData()
     {
+        Assert.assertEquals("Implicit Tests", "", "");
         Assert.assertEquals("Command has correct label", "test", command.getLabel());
-        Assert.assertEquals("Child has correct path", "test fail", child.getPath(' '));
-        Assert.assertEquals("Child has correct lineage", command, child.getParent());
+        Assert.assertEquals("Command has correct children", child, command.getChildren().get("fail"));
+        Assert.assertEquals("Command has correct description", "Gives basic information about TestPlugin.", command.getDescription());
         Assert.assertEquals("Command has correct permission", "testplugin.test", command.getPermission());
+        Assert.assertEquals("Child has correct path", "test fail", child.getPath(' '));
+        Assert.assertEquals("Child has correct path (String)", "test fail", child.getPath(" "));
+        Assert.assertEquals("Child has correct lineage", command, child.getParent());
         Assert.assertEquals("Child permission is sub-permission of parent", "testplugin.test.fail", child.getPermission());
+        Assert.assertEquals("SetDescription", "Something else", child3.getDescription());
     }
 
     @Test

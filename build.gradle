@@ -24,6 +24,7 @@ apply plugin: 'idea'
 apply plugin: 'idea-utils'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: "jacoco"
 //apply plugin: 'findbugs'
 
 idea {
@@ -83,6 +84,15 @@ processResources {
 clean {
     delete "final/"
     delete "testserver/"
+}
+
+jacocoTestReport {
+    group = "Reporting"
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
+    }
 }
 
 compileJava.dependsOn {
@@ -177,5 +187,4 @@ def hasArtifact(groupId, artifactId, version) {
     def file = new File(localMavenRepo, groupId.replace('.', '/') + "/" + artifactId + "/" + version + "/")
     return file.exists()
 }
-
 // END Building Spigot and Bukkit
