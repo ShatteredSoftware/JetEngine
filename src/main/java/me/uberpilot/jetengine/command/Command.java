@@ -60,19 +60,20 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
         messagePath = (parent != null ? (parent.getPath('_')) : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
 
-        //Default handling for description.
-        if (!plugin.getMessages().hasMessage(messagePath))
-        {
-            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " /" + getLabel() + " command."));
-        }
-        this.description = plugin.getMessages().getMessage(messagePath);
 
         //Default handling for feature name.
         if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", '/' + (parent != null ? parent.getPath(' ') : "") + this.getLabel()));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", '/' + (parent != null ? parent.getPath(' ') + " " : "") + this.getLabel() + " command"));
         }
         this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
+
+        //Default handling for description.
+        if (!plugin.getMessages().hasMessage(messagePath))
+        {
+            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " " + this.feature_name + "."));
+        }
+        this.description = plugin.getMessages().getMessage(messagePath);
 
         //Hook this to the parent.
         if(parent != null)
@@ -112,6 +113,11 @@ public class Command extends BukkitCommand implements CommandExecutor
     public String getLabel()
     {
         return label;
+    }
+
+    public String getFeatureName()
+    {
+        return feature_name;
     }
 
     @Override
