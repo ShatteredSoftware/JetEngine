@@ -96,6 +96,13 @@ public class TestCommand
     }
 
     @Test
+    public void testCommandMessageData()
+    {
+        Assert.assertEquals("Command has correct default description", "TestPlugin /test fail command.", child.getDescription());
+        Assert.assertEquals("Command has correct feature name", "/test fail command", child.getFeatureName());
+    }
+
+    @Test
     public void testExecute()
     {
         Assert.assertTrue("Sender with perms successfully executes", command.execute(root, "test", null));
