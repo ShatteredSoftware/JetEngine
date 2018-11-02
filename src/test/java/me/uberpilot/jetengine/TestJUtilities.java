@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TestJUtilities {
 
@@ -35,6 +36,8 @@ public class TestJUtilities {
         Assert.assertEquals("Expect empty string for null list to punctuate.",  "", JUtilities.punctuateList(nullList));
         Assert.assertEquals("Expect empty string for empty list to punctuate.",  "", JUtilities.punctuateList(emptyStrings));
         Assert.assertEquals("Expect properly punctuated list.", "Thing 1, Thing 2, and Thing 3", JUtilities.punctuateList(strings));
+        Assert.assertEquals("Expect properly punctuated list.", "One", JUtilities.punctuateList(Arrays.asList("One")));
+        Assert.assertEquals("Expect properly punctuated list.", "One, and Two", JUtilities.punctuateList(Arrays.asList("One", "Two")));
         Assert.assertEquals("Expect properly punctuated translated list.", "Cosa 1, Cosa 2, y Cosa 3", JUtilities.punctuateList(langStrings, ",", "y"));
     }
 
