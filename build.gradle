@@ -4,6 +4,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
+        mavenLocal()
     }
     dependencies {
         classpath group: 'com.github.rodionmoiseev.gradle.plugins', name: 'idea-utils', version: '0.2'
@@ -49,11 +51,12 @@ dependencies {
     compile group: 'org.spigotmc', name: 'spigot-api', version: project.property("apiversion")
     compile group: 'org.spigotmc', name: 'spigot', version: project.property("apiversion")
 
-    testCompile group: 'org.powermock', name: 'powermock', version: '1.6.4', ext: 'pom'
-    testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.4'
-    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.4'
-    testCompile group: 'org.powermock', name: 'powermock-module-junit4-rule', version: '1.6.4'
-    testCompile group: 'org.powermock', name: 'powermock-classloading-xstream', version: '1.6.4'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.8.0'
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.0RC2'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.0'
+    testCompile 'org.powermock:powermock-core:1.7.0'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.7.0'
 
     // dependencies go here
     // Example:
