@@ -10,7 +10,7 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public final class JUtilities
 {
-    protected JUtilities() {}
+    private JUtilities() {}
 
     public static String punctuateList(List<? extends String> list)
     {
@@ -31,7 +31,7 @@ public final class JUtilities
         for(int i = 0; i < list.size(); i++)
         {
             builder.append(list.get(i));
-            if(i != list.size() - 1 && list.size() > 1)
+            if(i != list.size() - 1)
             {
                 if(i != list.size() - 2)
                 {
