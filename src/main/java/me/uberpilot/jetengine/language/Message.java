@@ -1,5 +1,7 @@
 package me.uberpilot.jetengine.language;
 
+import me.uberpilot.jetengine.JUtilities;
+
 public class Message
 {
     private String id;
@@ -35,7 +37,7 @@ public class Message
      */
     public String get()
     {
-        return (value != null && value.length() > 0) ? value : def;
+        return (!JUtilities.isEmptyOrNull(value)) ? value : def;
     }
 
     /**
@@ -44,7 +46,7 @@ public class Message
      */
     public String getOrDef(String def)
     {
-        return (value != null && value.length() > 0) ? value : def;
+        return (!JUtilities.isEmptyOrNull(value)) ? value : def;
     }
 
     public String getId()
