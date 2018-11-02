@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Represents a command and information attached to it.
  */
+@SuppressWarnings("WeakerAccess UnusedDeclaration")
 public class Command extends BukkitCommand implements CommandExecutor
 {
     private final String messagePath;
@@ -56,8 +57,8 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.executor = executor;
         this.children = new HashMap<>();
 
-        this.permission = plugin.getName().toLowerCase() + '.' + (parent != null ? (parent.getPermission() + '.') : "") + label.toLowerCase();
-        messagePath = plugin.getName().toLowerCase() + "_cmd." + (parent != null ? parent.getPath('_') : "") + label.toLowerCase();
+        this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
+        messagePath = (parent != null ? parent.getPath('_') : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
 
         //Default handling for description.
         if (!plugin.getMessages().hasMessage(messagePath + ".desc"))
@@ -78,7 +79,7 @@ public class Command extends BukkitCommand implements CommandExecutor
             this.getParent().addChild(this);
     }
 
-    private String getPath(String separator)
+    public String getPath(String separator)
     {
         return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
     }
@@ -116,7 +117,16 @@ public class Command extends BukkitCommand implements CommandExecutor
     @Override
     public boolean execute(CommandSender sender, String label, String[] args)
     {
-        if(args.length > 0)
+        if(label == null)
+            throw new IllegalArgumentException("Command " + this.label + " cannot be executed with null label.");
+
+        if(sender == null)
+            throw new IllegalArgumentException("Command " + this.label + " cannot be executed with null sender.");
+
+        if(args == null)
+            args = new String[0];
+
+        if(args.length > 0 && children.size() > 0)
         {
             if(children.containsKey(args[0]))
             {
