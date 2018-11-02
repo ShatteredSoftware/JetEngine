@@ -25,6 +25,7 @@ public class TestMessage
     public void testMessageValid()
     {
         Assert.assertEquals("Get Value, Valid", "&6Hello World!", message.get());
+        Assert.assertEquals("Get Value, Empty Default", "&6Hello World!", message.getOrDef("&8Hello!"));
     }
 
     @Test
@@ -39,6 +40,12 @@ public class TestMessage
     {
         Assert.assertEquals("Get Value, Null", "&aHello World!", defMessageNull.get());
         Assert.assertEquals("Get Value, Null Default", "&8Hello!", defMessageNull.getOrDef("&8Hello!"));
+    }
+
+    @Test
+    public void testMessageToString()
+    {
+        Assert.assertEquals("To String", "Message{id='test_string1', value='&6Hello World!', def='&7Default Hello!'}", message.toString());
     }
 
 }
