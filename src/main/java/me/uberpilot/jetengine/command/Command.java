@@ -58,14 +58,14 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.children = new HashMap<>();
 
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
-        messagePath = (parent != null ? parent.getPath('_') : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
+        messagePath = (parent != null ? (parent.getPath('_')) : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
 
         //Default handling for description.
-        if (!plugin.getMessages().hasMessage(messagePath + ".desc"))
+        if (!plugin.getMessages().hasMessage(messagePath))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".desc", plugin.getName() + " /" + getLabel() + " command."));
+            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " /" + getLabel() + " command."));
         }
-        this.description = plugin.getMessages().getMessage(messagePath + ".desc");
+        this.description = plugin.getMessages().getMessage(messagePath);
 
         //Default handling for feature name.
         if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
@@ -168,31 +168,6 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.children.put(command.getLabel(), command);
     }
 
-    @Override
-    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException
-    {
-        //Don't parse empty args.
-        if(args.length < 1)
-            return null;
-
-        //Pass down to children that the sender has access to.
-        if(children.containsKey(args[0].toLowerCase()) && sender.hasPermission(children.get(args[0].toLowerCase()).getPermission()))
-            return children.get(args[0].toLowerCase()).tabComplete(sender, alias, Arrays.copyOfRange(args, 1, args.length));
-
-        //Handle this here.
-        ArrayList<String> completions = new ArrayList<>();
-        for(Command child : children.values())
-        {
-            if(sender.hasPermission(child.getPermission())
-                    && (child.getLabel().startsWith(args[args.length - 1]))
-                    || child.getAliases().stream().anyMatch((s) -> s.startsWith(args[args.length - 1])))
-            {
-                completions.add(child.getLabel());
-            }
-        }
-        return completions;
-    }
-
     public void addChildren(Command... commands)
     {
         for(Command command : commands)
@@ -205,7 +180,7 @@ public class Command extends BukkitCommand implements CommandExecutor
     public org.bukkit.command.Command setDescription(String description)
     {
         this.description = description;
-        plugin.getMessages().set(messagePath + ".desc", description);
+        plugin.getMessages().set(messagePath, description);
         return this;
     }
 }
