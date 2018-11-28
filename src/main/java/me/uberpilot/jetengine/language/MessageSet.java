@@ -1,10 +1,10 @@
 package me.uberpilot.jetengine.language;
 
-import me.uberpilot.jetengine.JPlugin;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.annotation.Nonnull;
 
 /**
  * Represents a set of messages for a plugin.
@@ -13,10 +13,9 @@ import java.util.Iterator;
  * @version 1.0
  * @since 1.0
  */
+@SuppressWarnings("WeakerAccess UnusedDeclaration")
 public class MessageSet implements Iterable<Message>
 {
-    /** A link to the parent plugin. */
-    private transient JPlugin plugin;
 
     /** Primary color, for emphasis. */
     private String primaryColor;
@@ -41,9 +40,9 @@ public class MessageSet implements Iterable<Message>
      *
      * @param messages Messages to be registered by default.
      */
-    public MessageSet(JPlugin plugin, Message... messages)
+    public MessageSet(Message... messages)
     {
-        this(plugin, ChatColor.DARK_GREEN.toString(), ChatColor.GRAY.toString(), ChatColor.DARK_GRAY.toString(), messages);
+        this(ChatColor.DARK_GREEN.toString(), ChatColor.GRAY.toString(), ChatColor.DARK_GRAY.toString(), messages);
     }
 
     /**
@@ -54,9 +53,8 @@ public class MessageSet implements Iterable<Message>
      * @param tertiaryColor Tertiary color, for misc text.
      * @param messages Messages to be registered by default.
      */
-    public MessageSet(JPlugin plugin, String primaryColor, String secondaryColor, String tertiaryColor, Message... messages)
+    public MessageSet(String primaryColor, String secondaryColor, String tertiaryColor, Message... messages)
     {
-        this.plugin = plugin;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tertiaryColor = tertiaryColor;
@@ -177,7 +175,7 @@ public class MessageSet implements Iterable<Message>
     }
 
     @Override
-    public Iterator<Message> iterator()
+    @Nonnull public Iterator<Message> iterator()
     {
         return messages.values().iterator();
     }
