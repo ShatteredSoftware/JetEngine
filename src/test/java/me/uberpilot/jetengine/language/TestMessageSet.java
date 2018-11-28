@@ -22,13 +22,10 @@ public class TestMessageSet
     @Before
     public void setUp()
     {
-        JPlugin plugin = Mockito.mock(JPlugin.class);
-
-
-        set = new MessageSet(plugin);
-        setColors = new MessageSet(plugin, ChatColor.DARK_RED.toString(), ChatColor.RED.toString(), ChatColor.DARK_GRAY.toString());
-        clearSet = new MessageSet(plugin);
-        preSet = new MessageSet(plugin, ChatColor.DARK_RED.toString(), ChatColor.RED.toString(), ChatColor.DARK_GRAY.toString(),
+        set = new MessageSet();
+        setColors = new MessageSet(ChatColor.DARK_RED.toString(), ChatColor.RED.toString(), ChatColor.DARK_GRAY.toString());
+        clearSet = new MessageSet();
+        preSet = new MessageSet(ChatColor.DARK_RED.toString(), ChatColor.RED.toString(), ChatColor.DARK_GRAY.toString(),
                 new Message("tm", "Test Message"), new Message("pref_test", "$pre"));
 
         set.addMessage(new Message("core.prefix",""));

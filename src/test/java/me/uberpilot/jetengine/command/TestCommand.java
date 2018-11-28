@@ -35,7 +35,7 @@ public class TestCommand
     public void setUp()
     {
 
-        MessageSet messages = new MessageSet(plugin);
+        MessageSet messages = new MessageSet();
 
         Messenger messenger = new Messenger(plugin, messages);
 
