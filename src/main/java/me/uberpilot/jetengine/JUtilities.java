@@ -20,6 +20,8 @@ public final class JUtilities
     /**
      * Punctuates a list of strings with commas and 'and.'
      * @param list The list of strings to punctuate.
+     * @param separator The string to place between each item.
+     * @param and The string to place between the second to last and last item.
      * @return A single punctuated string.
      */
     public static String punctuateList(List<? extends String> list, String separator, String and)
