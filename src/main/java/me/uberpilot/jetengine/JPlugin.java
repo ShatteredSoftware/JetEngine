@@ -32,7 +32,7 @@ public abstract class JPlugin extends JavaPlugin
     protected JPlugin(String name)
     {
         super();
-        this.messages = new MessageSet(this);
+        this.messages = new MessageSet();
         this.messenger = new Messenger(this, messages);
         this.commands = new HashMap<>();
 
@@ -59,8 +59,8 @@ public abstract class JPlugin extends JavaPlugin
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
         this.messages.addMessage(new Message("core.list_separator", ","));
         this.messages.addMessage(new Message("core.list_and", "and"));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help.desc", "Gives a list of commands from " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "", "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help", "Gives a list of commands from " + name + "."));
 
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->

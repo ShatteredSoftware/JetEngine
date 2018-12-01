@@ -8,7 +8,6 @@ public class JetEngine extends JPlugin
     public JetEngine()
     {
         super("JetEngine");
-        super.debug = false;
     }
 
     @Override
