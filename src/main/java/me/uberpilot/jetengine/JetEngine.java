@@ -14,6 +14,7 @@ public class JetEngine extends JPlugin
     @Override
     protected void preEnable()
     {
+        messages.addMessage(new Message("jetengine_cmd.jetengine.list", "Lists the messages loaded in the JetEngine registry."));
         messages.addMessage(new Message("message_list_item", "&f%s $tc- $sc%s"));
 
         Command list = new Command(this, baseCommand, "list", ((sender, label, args) ->
