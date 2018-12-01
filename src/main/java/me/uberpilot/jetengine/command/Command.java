@@ -44,6 +44,16 @@ public class Command extends BukkitCommand implements CommandExecutor
 
     public Command(JPlugin plugin, Command parent, String label, JCommandExecutor executor)
     {
+        this(plugin, parent, label, executor, new ArrayList<>());
+    }
+
+    public Command(JPlugin plugin, Command parent, String label, JCommandExecutor executor, String... aliases)
+    {
+        this(plugin, parent, label, executor, Arrays.asList(aliases));
+    }
+
+    public Command(JPlugin plugin, Command parent, String label, JCommandExecutor executor, List<String> aliases)
+    {
         super(label);
 
         //Check for nulls for plugin and for label.
@@ -56,6 +66,8 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.label = label;
         this.executor = executor;
         this.children = new HashMap<>();
+
+        this.setAliases(aliases);
 
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
         messagePath = (parent != null ? (parent.getPath('_')) : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
@@ -77,7 +89,24 @@ public class Command extends BukkitCommand implements CommandExecutor
 
         //Hook this to the parent.
         if(parent != null)
-            this.getParent().addChild(this);
+        {
+            this.parent.addChild(this);
+            this.parent.createHelpCommand();
+            for(String alias : aliases)
+            {
+                this.parent.addChild(alias, this);
+            }
+        }
+    }
+
+    private void createHelpCommand()
+    {
+        //Add help automatically if this is a child.
+        if (!this.children.containsKey("help"))
+        {
+            this.children.put("help", new Command(this.plugin, this, "help", (sender, unused1, unused2) -> sendCommandHelp(sender)));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".help", "Help for the " + this.feature_name));
+        }
     }
 
     public String getPath(String separator)
@@ -95,9 +124,10 @@ public class Command extends BukkitCommand implements CommandExecutor
         plugin.getMessenger().sendErrorMessage(sender, "core.no_permission", this.feature_name);
     }
 
-    private void sendCommandHelp(CommandSender sender)
+    private boolean sendCommandHelp(CommandSender sender)
     {
         plugin.getMessenger().sendCommandHelp(sender, this);
+        return true;
     }
 
     public Command getParent()
@@ -167,6 +197,11 @@ public class Command extends BukkitCommand implements CommandExecutor
     public String getDescription()
     {
         return description;
+    }
+
+    public void addChild(String label, Command command)
+    {
+        this.children.put(label, command);
     }
 
     public void addChild(Command command)
