@@ -1,6 +1,9 @@
  JetEngine
 -------------------------------------------------
 [![Build status](https://badge.buildkite.com/8b52b054c64cd540310fc2fd948c6f1044f45e77038adf6acd.svg)](https://buildkite.com/jetsuite/jetengine)
+[![Discord](https://img.shields.io/badge/chat-on%20discord-%237289DA.svg)](http://discordapp.com/invite/zUbNX9t)
+![GitHub last commit](https://img.shields.io/github/last-commit/UberPilot/JetEngine.svg)
+![GitHub](https://img.shields.io/github/license/UberPilot/JetEngine.svg)
 
 Welcome JetEngine, an API to make the development of plugins for Spigot much easier. Check the [wiki](https://github.com/UberPilot/JetEngine/wiki) for more information on using the plugin and extending its features.
 
