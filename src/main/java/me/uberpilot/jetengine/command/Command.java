@@ -92,11 +92,22 @@ public class Command extends BukkitCommand implements CommandExecutor
         {
             this.parent.addChild(this);
             this.parent.createHelpCommand();
-            for(String alias : aliases)
-            {
-                this.parent.addChild(alias, this);
-            }
+            aliases.forEach(e -> parent.addChild(e, this));
         }
+    }
+
+    public void addAlias(String name)
+    {
+        if(this.parent != null)
+        {
+            this.parent.addChild(name, this);
+        }
+        this.getAliases().add(name);
+    }
+
+    public void addAliases(String... aliases)
+    {
+        Arrays.stream(aliases).forEach(this::addAlias);
     }
 
     private void createHelpCommand()
