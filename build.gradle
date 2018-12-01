@@ -77,6 +77,14 @@ publishing {
             groupId = project.property("group")
             artifactId = project.property("name")
             version = project.property("version")
+
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                description = 'A spigot plugin to make spigot plugins easier.'
+            }
         }
     }
 }
@@ -119,6 +127,16 @@ shadowJar {
         exclude(dependency('org.spigotmc:spigot-api:.*'))
         exclude(dependency('org.spigotmc:spigot:.*'))
     }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
 }
 
 task deploy(type: Copy, dependsOn: ['build']) {
