@@ -3,6 +3,7 @@ package me.uberpilot.jetengine;
 import me.uberpilot.jetengine.command.Command;
 import me.uberpilot.jetengine.language.Message;
 
+@SuppressWarnings("UnusedDeclaration")
 public class JetEngine extends JPlugin
 {
     public JetEngine()

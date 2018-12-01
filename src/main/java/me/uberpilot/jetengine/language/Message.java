@@ -2,6 +2,7 @@ package me.uberpilot.jetengine.language;
 
 import me.uberpilot.jetengine.JUtilities;
 
+@SuppressWarnings("WeakerAccess")
 public class Message
 {
     private String id;

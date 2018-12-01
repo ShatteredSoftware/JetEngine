@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+@SuppressWarnings("WeakerAccess UnusedDeclaration")
 public abstract class JPlugin extends JavaPlugin
 {
     protected MessageSet messages;
