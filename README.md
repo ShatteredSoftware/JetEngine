@@ -11,3 +11,6 @@ Welcome JetEngine, an API to make the development of plugins for Spigot much eas
 
 Gradle Configuration based off of [this repo](https://github.com/ReneHollander/empty-spigot-plugin).
 
+The [Sound enum](https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a) by 
+[MrBlobman](https://www.spigotmc.org/members/mrblobman.35275/) and [Nikl](https://www.spigotmc.org/members/nikl.205362/) 
+were instrumental in updating this to cover 1.13, and will be useful for further updates.
