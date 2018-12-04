@@ -21,7 +21,7 @@ public class JetEngine extends JPlugin
         messages.addMessage(new Message("jetengine_cmd.jetengine.command.one", "Displays a single command in the JetEngine registry."));
         messages.addMessage(new Message("jetengine.message_list_item", "&f%s $tc- $sc%s"));
         messages.addMessage(new Message("jetengine.command_info", "$pc/%s $tc- [$sc%s$tc]\n    &fDescription: $sc%s"));
-        messages.addMessage(new Message("jetengine.message_message_item", "&f%s $tc- %s $tc($scDefault: &r%s$tc)"));
+        messages.addMessage(new Message("jetengine.message_message_item", "&f%s $tc- &r%s $tc($scDefault: &r%s$tc)"));
         messages.addMessage(new Message("jetengine.message_not_found", "$pre &cMessage '&f%s&c' Not Found."));
         messages.addMessage(new Message("jetengine.command_not_found", "$pre &cCommand '&f/%s&c' Not Found."));
 
