@@ -56,7 +56,7 @@ public class Messenger
         if(sender instanceof Player)
         {
             Player player = (Player) sender;
-            player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR.bukkitSound(), 1, .8f);
+            player.playSound(player.getLocation(), Sound.NOTE_BASS.bukkitSound(), 1, .8f);
         }
     }
 
