@@ -17,6 +17,14 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * JPlugin. The core of the JetEngine plugin layer. Linked to message sets and includes utilities to translate messages.
+ * @see me.uberpilot.jetengine.command.Command
+ * @see me.uberpilot.jetengine.messenger.Messenger
+ * @see me.uberpilot.jetengine.language.MessageSet
+ * @author UberPilot
+ * @since 1.0
+ */
 @SuppressWarnings("WeakerAccess UnusedDeclaration")
 public abstract class JPlugin extends JavaPlugin
 {
