@@ -70,7 +70,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.setAliases(aliases);
 
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
-        messagePath = this.getMessagePath() + ".desc";
+        messagePath = this.getMessagePath();
 
 
         //Default handling for feature name.
@@ -81,11 +81,11 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
 
         //Default handling for description.
-        if (!plugin.getMessages().hasMessage(messagePath))
+        if (!plugin.getMessages().hasMessage(messagePath + ".description"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " " + this.feature_name.substring(4) + "."));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".description", plugin.getName() + " " + this.feature_name.substring(4) + "."));
         }
-        this.description = plugin.getMessages().getMessage(messagePath);
+        this.description = plugin.getMessages().getMessage(messagePath + ".description");
 
         //Hook this to the parent.
         if(parent != null)
@@ -121,7 +121,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         if (!this.children.containsKey("help"))
         {
             this.children.put("help", new Command(this.plugin, this, "help", (sender, unused1, unused2) -> sendCommandHelp(sender)));
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.desc", "Help for the " + this.feature_name));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description", "Help for the " + this.feature_name));
         }
     }
 
@@ -239,7 +239,7 @@ public class Command extends BukkitCommand implements CommandExecutor
     public org.bukkit.command.Command setDescription(String description)
     {
         this.description = description;
-        plugin.getMessages().set(messagePath, description);
+        plugin.getMessages().set(messagePath + ".description", description);
         return this;
     }
 }

@@ -53,8 +53,8 @@ public class TestCommand
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
         messages.addMessage(new Message("core.list_separator", ","));
         messages.addMessage(new Message("core.list_and", "and"));
-        messages.addMessage(new Message(name.toLowerCase() + "_cmd.test.desc", "Gives basic information about " + name + "."));
-        messages.addMessage(new Message(name.toLowerCase() + "_cmd.help.desc", "Gives a list of commands from " + name + "."));
+        messages.addMessage(new Message(name.toLowerCase() + "_cmd.test.description", "Gives basic information about " + name + "."));
+        messages.addMessage(new Message(name.toLowerCase() + "_cmd.help.description", "Gives a list of commands from " + name + "."));
 
         plugin = PowerMockito.mock(JPlugin.class);
         when(plugin.getMessages()).thenReturn(messages);

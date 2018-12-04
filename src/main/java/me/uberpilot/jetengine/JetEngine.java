@@ -15,10 +15,10 @@ public class JetEngine extends JPlugin
     protected void preEnable()
     {
         baseCommand.addAlias("je");
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message.desc", "Lists the messages loaded in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one.desc", "Displays a raw message in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command.desc", "Displays a list of commands JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one.desc", "Displays a single command in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.description", "Lists the messages loaded in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one.description", "Displays a raw message in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.description", "Displays a list of commands JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one.description", "Displays a single command in the JetEngine registry."));
         messages.addMessage(new Message("jetengine.message_list_item", "&f%s $tc- $sc%s"));
         messages.addMessage(new Message("jetengine.command_info", "$pc/%s $tc- [$sc%s$tc]\n    &fDescription: $sc%s"));
         messages.addMessage(new Message("jetengine.message_message_item", "&f%s $tc- &r%s $tc($scDefault: &r%s$tc)"));
