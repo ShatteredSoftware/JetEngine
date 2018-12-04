@@ -175,21 +175,24 @@ public abstract class JPlugin extends JavaPlugin
 
         preEnable();
 
-        //Load messages from files.
+        //Load internal messages.
+        YamlConfiguration internal;
+        internal = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
+        for (Message m : messages)
+        {
+            if (internal.contains(m.getId())) m.set(internal.getString(m.getId(), m.get()));
+        }
+
+        //Load external messages.
         YamlConfiguration cfg;
         File ext = new File(getDataFolder(), "messages.yml");
         if (ext.exists())
         {
             cfg = YamlConfiguration.loadConfiguration(ext);
-        }
-        else
-        {
-            cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
-        }
-
-        for (Message m : messages)
-        {
-            if (cfg.contains(m.getId())) m.set(cfg.getString(m.getId(), m.get()));
+            for (Message m : messages)
+            {
+                if (cfg.contains(m.getId())) m.set(cfg.getString(m.getId(), m.get()));
+            }
         }
 
         //Reflection shenanigans to register commands.
