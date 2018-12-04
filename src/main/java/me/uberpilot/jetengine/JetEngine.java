@@ -58,41 +58,41 @@ public class JetEngine extends JPlugin
             return true;
         }, "cmd");
 
-        //TODO: Make me work with base aliases.
         Command cmd_one = new Command(this, command, "one", ((sender, label, args) -> {
             if(args.length == 0)
             {
                 messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", ""));
             }
-            if(commands.containsKey(args[0]))
+            for(Command c : commands.values())
             {
-                Command current = commands.get(args[0]);
-                for (int i = 1; i < args.length ; i++)
+                if (c.getLabel().equalsIgnoreCase(args[0]) || c.getAliases().contains(args[0]))
                 {
-                    if(current.getChildren().containsKey(args[i]))
+                    Command current = c;
+                    for (int i = 1; i < args.length; i++)
                     {
-                        if(sender.hasPermission(current.getChildren().get(args[i]).getPermission()))
+                        if (current.getChildren().containsKey(args[i]))
                         {
-                            current = current.getChildren().get(args[i]);
+                            if (sender.hasPermission(current.getChildren().get(args[i]).getPermission()))
+                            {
+                                current = current.getChildren().get(args[i]);
+                            }
+                            else
+                            {
+                                messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
+                                return true;
+                            }
                         }
                         else
                         {
                             messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
+                            return true;
                         }
                     }
-                    else
-                    {
-                        messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
-                    }
+                    messenger.sendMessage(sender, "jetengine.command_info", current.getPath(' '), current.getPermission(), current.getDescription());
+                    return true;
                 }
-                messenger.sendMessage(sender, "jetengine.command_info", current.getPath(' '), current.getPermission(),
-                        current.getDescription());
-
             }
-            else
-            {
-                messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
-            }
+            messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
             return true;
         }));
     }
