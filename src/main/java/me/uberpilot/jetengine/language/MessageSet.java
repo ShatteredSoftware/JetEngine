@@ -204,4 +204,14 @@ public class MessageSet implements Iterable<Message>
     {
         this.messages.clear();
     }
+
+    /**
+     * Get a message default without replacing any of the placeholders.
+     * @param id The ID of the message to be retrieved.
+     * @return The default message.
+     */
+    public String getRawDefault(String id)
+    {
+        return messages.get(id).getDefault();
+    }
 }

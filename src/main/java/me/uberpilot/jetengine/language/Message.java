@@ -69,4 +69,12 @@ public class Message
     {
         this.value = value;
     }
+
+    /**
+     * @return The default value of the message.
+     */
+    public String getDefault()
+    {
+        return def;
+    }
 }
