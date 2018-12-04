@@ -121,6 +121,7 @@ public abstract class JPlugin extends JavaPlugin
     protected JPlugin(String name)
     {
         super();
+        if(JUtilities.isEmptyOrNull(name)) throw new IllegalArgumentException("Plugin name cannot be null or empty.");
         this.messages = new MessageSet();
         this.messenger = new Messenger(this, messages);
         this.commands = new HashMap<>();
