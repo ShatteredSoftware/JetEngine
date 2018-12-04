@@ -128,7 +128,7 @@ public class Command extends BukkitCommand implements CommandExecutor
             this.children.put("help", new Command(this.plugin, this, "help",
                     (sender, unused1, unused2) -> sendCommandHelp(sender)));
             this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description",
-                    "Help for the " + this.feature_name));
+                    "Help for " + this.feature_name), true);
         }
     }
 

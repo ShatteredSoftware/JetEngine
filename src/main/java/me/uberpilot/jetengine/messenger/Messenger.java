@@ -85,6 +85,7 @@ public class Messenger
     public void sendCommandHelp(CommandSender sender, Command command)
     {
         sendMessage(sender, "core.cmd_help_header", plugin.getName(), command.getPath(' '));
+        sendMessage(sender, "core.help_line", command.getPath(' '), command.getDescription());
         for(HashMap.Entry<String, Command> entry : command.getChildren().entrySet())
         {
             if(sender.hasPermission(entry.getValue().getPermission()))
