@@ -173,22 +173,24 @@ public class Command extends BukkitCommand implements CommandExecutor
         if(args == null)
             args = new String[0];
 
-        if(args.length > 0 && children.size() > 0)
-        {
-            if(children.containsKey(args[0]))
-            {
-                //Pass handling down to children.
-                return children.get(args[0]).execute(sender, label, Arrays.copyOfRange(args, 1, args.length));
-            }
-            else
-            {
-                plugin.getMessenger().sendErrorMessage(sender, "core.invalid_args");
-                sendCommandHelp(sender);
-                return true;
-            }
-        }
         if(sender.hasPermission(permission))
+        {
+            if (args.length > 0 && children.size() > 0)
+            {
+                if (children.containsKey(args[0]))
+                {
+                    //Pass handling down to children.
+                    return children.get(args[0]).execute(sender, label, Arrays.copyOfRange(args, 1, args.length));
+                }
+                else
+                {
+                    plugin.getMessenger().sendErrorMessage(sender, "core.invalid_args");
+                    sendCommandHelp(sender);
+                    return true;
+                }
+            }
             return executor.execute(sender, label, args);
+        }
 
         sendNoPermissionMessage(sender);
         return true;
