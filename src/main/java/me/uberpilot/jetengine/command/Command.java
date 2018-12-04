@@ -76,14 +76,14 @@ public class Command extends BukkitCommand implements CommandExecutor
         //Default handling for feature name.
         if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", '/' + (parent != null ? parent.getPath(' ') + " " : "") + this.getLabel() + " command"));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", "the /" + (parent != null ? parent.getPath(' ') + " " : "") + this.getLabel() + " command"));
         }
         this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
 
         //Default handling for description.
         if (!plugin.getMessages().hasMessage(messagePath))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " " + this.feature_name + "."));
+            this.plugin.getMessages().addMessage(new Message(messagePath, plugin.getName() + " " + this.feature_name.substring(4) + "."));
         }
         this.description = plugin.getMessages().getMessage(messagePath);
 

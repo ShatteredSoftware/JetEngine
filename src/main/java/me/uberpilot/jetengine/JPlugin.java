@@ -116,7 +116,7 @@ public abstract class JPlugin extends JavaPlugin
     {
         //Create messages and defaults.
         this.messages.addMessage(new Message("core.prefix", "$sc[$pc" + name + "$sc]"));
-        this.messages.addMessage(new Message("core.no_permission", "$pre &cYou don't have permission to use %s"));
+        this.messages.addMessage(new Message("core.no_permission", "$pre &cYou don't have permission to use %s."));
         this.messages.addMessage(new Message("core.invalid_args", "$pre &cInvalid argument."));
         this.messages.addMessage(new Message("core.help_line", "  $pc/%s $tc- $sc%s"));
         this.messages.addMessage(new Message("core.help_header", "$scHelp for $pc%s$sc:"));
@@ -130,7 +130,7 @@ public abstract class JPlugin extends JavaPlugin
         this.messages.addMessage(new Message("core.list_separator", ","));
         this.messages.addMessage(new Message("core.list_and", "and"));
         this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "", "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "_help", "Gives a list of commands from " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help", "Gives a list of commands from " + name + "."));
 
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
