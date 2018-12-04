@@ -48,22 +48,22 @@ public abstract class JPlugin extends JavaPlugin
      */
     private CommandMap commandMap;
     /**
-     * <b>User feature toggle:</b> Debug logging. <br/>
+     * <b>User feature toggle:</b> Debug logging. <br>
      * <i>If debug mesages should be logged.</i>
      * */
     protected boolean debug = false;
     /**
-     * <b>User feature toggle:</b> Reload command. <br/>
+     * <b>User feature toggle:</b> Reload command. <br>
      * <i>If the reload command should be enabled.</i>
      * */
     protected boolean reload = false;
     /**
-     * <b>User feature toggle:</b> Periodic saving. <br/>
+     * <b>User feature toggle:</b> Periodic saving. <br>
      * <i>If periodic saving should be run at all.</i>
      * */
     protected boolean periodicSave = false;
     /**
-     * <b>User feature setting:</b> Periodic saving period. <br/>
+     * <b>User feature setting:</b> Periodic saving period. <br>
      * <i>How often the save task should be run.</i>
      * */
     protected long periodicSavePeriod = 10 * 60 * 20;
@@ -82,7 +82,7 @@ public abstract class JPlugin extends JavaPlugin
     protected Command helpCommand;
 
     /**
-     * Reload command, following the format "<code>/{@link JPlugin#name name} reload</code>".<br/>
+     * Reload command, following the format "<code>/{@link JPlugin#name name} reload</code>".<br>
      * Only enabled if {@link JPlugin#reload reload} is enabled, otherwise <code>null</code>.
      * @see JPlugin#reload
      */
@@ -102,7 +102,7 @@ public abstract class JPlugin extends JavaPlugin
     }
 
     /**
-     * User-defined enable tasks.<br/>
+     * User-defined enable tasks.<br>
      * Run before registration.
      */
     protected void preEnable() {}
@@ -162,10 +162,10 @@ public abstract class JPlugin extends JavaPlugin
     }
 
     /**
-     * Bukkit overridden onEnable method.
+     * Bukkit overridden onEnable method.<br>
+     * <b>Note: Uses Reflection</b>
      * @see JavaPlugin#onEnable()
      * @see JPlugin#preEnable()
-     * @implNote Uses reflection.
      */
     @Override
     public void onEnable()
@@ -232,39 +232,8 @@ public abstract class JPlugin extends JavaPlugin
     }
 
     /**
-     * User-defined disable tasks.<br/>
-     * Run after JPlugin finishes its disable tasks.
-     */
-    protected void postDisable() {}
-
-    /**
-     * User-defined save task. Used for saving data to mitigate crashes.<br/>
-     * Run after a user-defined period, if enabled.
-     */
-    protected void periodicSave() {}
-
-    /**
-     * Bukkit overridden onEnable method.
-     * @see JavaPlugin#onDisable()
-     * @see JPlugin#postDisable()
-     */
-    @Override
-    public void onDisable()
-    {
-        //Clear commands and messages.
-        commands.clear();
-        messages.clear();
-
-        //Cancel tasks we've made.
-        Bukkit.getScheduler().cancelTasks(this);
-
-        //Call user-defined disable.
-        postDisable();
-    }
-
-    /**
-     * Register a command.
-     * @implNote Uses reflection.
+     * Register a command.<br>
+     * <b>Note: Uses Reflection</b>
      * @param command The command to be registered.
      * @see Command#Command(JPlugin, Command, String, JCommandExecutor, List)
      * @throws IllegalArgumentException Null commands are not allowed.
@@ -291,6 +260,37 @@ public abstract class JPlugin extends JavaPlugin
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * User-defined save task. Used for saving data to mitigate crashes.<br>
+     * Run after a user-defined period, if enabled.
+     */
+    protected void periodicSave() {}
+
+    /**
+     * User-defined disable tasks.<br>
+     * Run after JPlugin finishes its disable tasks.
+     */
+    protected void postDisable() {}
+
+    /**
+     * Bukkit overridden onEnable method.
+     * @see JavaPlugin#onDisable()
+     * @see JPlugin#postDisable()
+     */
+    @Override
+    public void onDisable()
+    {
+        //Clear commands and messages.
+        commands.clear();
+        messages.clear();
+
+        //Cancel tasks we've made.
+        Bukkit.getScheduler().cancelTasks(this);
+
+        //Call user-defined disable.
+        postDisable();
     }
 
     /**

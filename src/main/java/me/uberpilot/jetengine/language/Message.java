@@ -6,10 +6,14 @@ import me.uberpilot.jetengine.util.JUtilities;
 public class Message
 {
     private String id;
-
     private String value;
     private String def;
 
+    /**
+     * Create a message.
+     * @param id ID of the message in a MessageSet.
+     * @param def Default message, with placeholders.
+     */
     public Message(String id, String def)
     {
         this.id = id;
@@ -17,6 +21,12 @@ public class Message
         this.def = def;
     }
 
+    /**
+     * Create a message with a current value.
+     * @param id ID of the message in a MessageSet.
+     * @param def Default message, with placeholders.
+     * @param value Value of the message.
+     */
     public Message(String id, String value, String def)
     {
         this.id = id;

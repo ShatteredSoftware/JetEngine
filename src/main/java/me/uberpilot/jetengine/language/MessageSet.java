@@ -23,12 +23,15 @@ public class MessageSet implements Iterable<Message>
     /** Secondary color, for general text. */
     private String secondaryColor;
 
-    /** Tertiary color, for misc text. */
+    /** Tertiary color, for misc text and characters, brackets. */
     private String tertiaryColor;
 
     /** List of registered messages, indexed by ID. */
     private HashMap<String, Message> messages;
 
+    /**
+     * @return A human-readable version of this object. Use {@link #getMessage(String, Object...)} ()} to get a message.
+     */
     @Override
     public String toString()
     {
@@ -130,6 +133,11 @@ public class MessageSet implements Iterable<Message>
         return messages.containsKey(id);
     }
 
+    /**
+     * Sets the value for a message.
+     * @param id ID of the message.
+     * @param value Value to set the message to.
+     */
     public void set(String id, String value)
     {
         messages.get(id).set(value);
@@ -159,16 +167,25 @@ public class MessageSet implements Iterable<Message>
         return tertiaryColor;
     }
 
+    /**
+     * @param primaryColor Sets the {@link #primaryColor Primary Color} for this MessageSet.
+     */
     public void setPrimaryColor(String primaryColor)
     {
         this.primaryColor = primaryColor;
     }
 
+    /**
+     * @param secondaryColor Sets the {@link #secondaryColor Primary Color} for this MessageSet.
+     */
     public void setSecondaryColor(String secondaryColor)
     {
         this.secondaryColor = secondaryColor;
     }
 
+    /**
+     * @param tertiaryColor Sets the {@link #tertiaryColor Primary Color} for this MessageSet.
+     */
     public void setTertiaryColor(String tertiaryColor)
     {
         this.tertiaryColor = tertiaryColor;
@@ -180,6 +197,9 @@ public class MessageSet implements Iterable<Message>
         return messages.values().iterator();
     }
 
+    /**
+     * Clear the MessageSet.
+     */
     public void clear()
     {
         this.messages.clear();

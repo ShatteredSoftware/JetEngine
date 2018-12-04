@@ -15,12 +15,23 @@ public class Messenger
     private transient JPlugin plugin;
     private MessageSet messages;
 
+    /**
+     * Create a messenger.
+     * @param plugin Plugin to link to.
+     * @param messages MessageSet to link to.
+     */
     public Messenger(JPlugin plugin, MessageSet messages)
     {
         this.plugin = plugin;
         this.messages = messages;
     }
 
+    /**
+     * Send a normal message.
+     * @param sender Target to send the message to.
+     * @param id ID of the {@link me.uberpilot.jetengine.language.Message Message} to get.
+     * @param vars Variables to replace in the message.
+     */
     public void sendMessage(CommandSender sender, String id, Object... vars)
     {
         if(sender != null)
@@ -33,6 +44,12 @@ public class Messenger
         }
     }
 
+    /**
+     * Send an error message. Plays a sound.
+     * @param sender Target to send the message to.
+     * @param id ID of the {@link me.uberpilot.jetengine.language.Message Message} to get.
+     * @param vars Variables to replace in the message.
+     */
     public void sendErrorMessage(CommandSender sender, String id, Object... vars)
     {
         sendMessage(sender, id, vars);
@@ -43,6 +60,12 @@ public class Messenger
         }
     }
 
+    /**
+     * Send an important message. Plays a sound.
+     * @param sender Target to send the message to.
+     * @param id ID of the {@link me.uberpilot.jetengine.language.Message Message} to get.
+     * @param vars Variables to replace in the message.
+     */
     public void sendImportantMessage(CommandSender sender, String id, Object... vars)
     {
         sendMessage(sender, id, vars);
@@ -54,6 +77,11 @@ public class Messenger
         }
     }
 
+    /**
+     * Sends help for a command.
+     * @param sender Target to send the help to.
+     * @param command Command to send help for.
+     */
     public void sendCommandHelp(CommandSender sender, Command command)
     {
         sendMessage(sender, "core.cmd_help_header", plugin.getName(), command.getPath(' '));
