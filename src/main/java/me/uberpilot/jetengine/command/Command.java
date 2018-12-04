@@ -70,7 +70,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.setAliases(aliases);
 
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
-        messagePath = (parent != null ? (parent.getPath('.') + '.') : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase() + ".desc";
+        messagePath = this.getMessagePath() + ".desc";
 
 
         //Default handling for feature name.
@@ -94,6 +94,11 @@ public class Command extends BukkitCommand implements CommandExecutor
             this.parent.createHelpCommand();
             aliases.forEach(e -> parent.addChild(e, this));
         }
+    }
+
+    private String getMessagePath()
+    {
+        return (this.parent != null ? this.parent.getMessagePath() + "." : this.plugin.getName().toLowerCase() + "_cmd.") + this.label.toLowerCase();
     }
 
     public void addAlias(String name)
