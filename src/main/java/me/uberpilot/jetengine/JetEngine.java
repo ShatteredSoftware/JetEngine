@@ -15,15 +15,24 @@ public class JetEngine extends JPlugin
     protected void preEnable()
     {
         baseCommand.addAlias("je");
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message.description", "Lists the messages loaded in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one.description", "Displays a raw message in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command.description", "Displays a list of commands JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one.description", "Displays a single command in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine.message_list_item", "&f%s $tc- $sc%s"));
-        messages.addMessage(new Message("jetengine.command_info", "$pc/%s $tc- [$sc%s$tc]\n    &fDescription: $sc%s"));
-        messages.addMessage(new Message("jetengine.message_message_item", "&f%s $tc- &r%s $tc($scDefault: &r%s$tc)"));
-        messages.addMessage(new Message("jetengine.message_not_found", "$pre &cMessage '&f%s&c' Not Found."));
-        messages.addMessage(new Message("jetengine.command_not_found", "$pre &cCommand '&f/%s&c' Not Found."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.description",
+                "Lists the messages loaded in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one.description",
+                "Displays a raw message in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.description",
+                "Displays a list of commands JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one.description",
+                "Displays a single command in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine.message_list_item",
+                "&f%s $tc- $sc%s"));
+        messages.addMessage(new Message("jetengine.command_info",
+                "$pc/%s $tc- [$sc%s$tc]\n    &fDescription: $sc%s"));
+        messages.addMessage(new Message("jetengine.message_message_item",
+                "&f%s $tc- &r%s $tc($scDefault: &r%s$tc)"));
+        messages.addMessage(new Message("jetengine.message_not_found",
+                "$pre &cMessage '&f%s&c' Not Found."));
+        messages.addMessage(new Message("jetengine.command_not_found",
+                "$pre &cCommand '&f/%s&c' Not Found."));
 
         Command message = new Command(this, baseCommand, "message", ((sender, label, args) ->
         {
@@ -39,7 +48,8 @@ public class JetEngine extends JPlugin
             String param = String.join(" ", args);
             if(messages.hasMessage(param))
             {
-                messenger.sendMessage(sender, "jetengine.message_message_item", param, messages.getRawMessage(param),
+                messenger.sendMessage(sender, "jetengine.message_message_item", param,
+                        messages.getRawMessage(param),
                         messages.getRawDefault(param));
             }
             else
@@ -61,7 +71,8 @@ public class JetEngine extends JPlugin
         Command cmd_one = new Command(this, command, "one", ((sender, label, args) -> {
             if(args.length == 0)
             {
-                messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", ""));
+                messenger.sendErrorMessage(sender, "jetengine.command_not_found",
+                        String.join(" ", ""));
             }
             for(Command c : commands.values())
             {
@@ -78,17 +89,20 @@ public class JetEngine extends JPlugin
                             }
                             else
                             {
-                                messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
+                                messenger.sendErrorMessage(sender, "jetengine.command_not_found",
+                                        String.join(" ", args));
                                 return true;
                             }
                         }
                         else
                         {
-                            messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
+                            messenger.sendErrorMessage(sender, "jetengine.command_not_found",
+                                    String.join(" ", args));
                             return true;
                         }
                     }
-                    messenger.sendMessage(sender, "jetengine.command_info", current.getPath(' '), current.getPermission(), current.getDescription());
+                    messenger.sendMessage(sender, "jetengine.command_info", current.getPath(' '),
+                            current.getPermission(), current.getDescription());
                     return true;
                 }
             }

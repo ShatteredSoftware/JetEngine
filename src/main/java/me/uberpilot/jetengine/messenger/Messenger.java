@@ -89,7 +89,8 @@ public class Messenger
         {
             if(sender.hasPermission(entry.getValue().getPermission()))
             {
-                sendMessage(sender, "core.help_line", command.getPath(' ') + " " + entry.getValue().getLabel(), entry.getValue().getDescription());
+                sendMessage(sender, "core.help_line", command.getPath(' ') + " " +
+                        entry.getValue().getLabel(), entry.getValue().getDescription());
             }
         }
     }

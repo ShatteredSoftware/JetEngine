@@ -143,7 +143,8 @@ public abstract class JPlugin extends JavaPlugin
     {
         //Create messages and defaults.
         this.messages.addMessage(new Message("core.prefix", "$sc[$pc" + name + "$sc]"));
-        this.messages.addMessage(new Message("core.no_permission", "$pre &cYou don't have permission to use %s."));
+        this.messages.addMessage(new Message("core.no_permission",
+                "$pre &cYou don't have permission to use %s."));
         this.messages.addMessage(new Message("core.invalid_args", "$pre &cInvalid argument."));
         this.messages.addMessage(new Message("core.help_line", "  $pc/%s $tc- $sc%s"));
         this.messages.addMessage(new Message("core.help_header", "$scHelp for $pc%s$sc:"));
@@ -156,13 +157,16 @@ public abstract class JPlugin extends JavaPlugin
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
         this.messages.addMessage(new Message("core.list_separator", ","));
         this.messages.addMessage(new Message("core.list_and", "and"));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".description", "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help.description", "Gives a list of commands from " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".description",
+                "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help.description",
+                "Gives a list of commands from " + name + "."));
 
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
         {
-            messenger.sendMessage(sender, "core.info", name, this.getDescription().getVersion(), this.authors, this.getDescription().getWebsite());
+            messenger.sendMessage(sender, "core.info", name, this.getDescription().getVersion(), this.authors,
+                    this.getDescription().getWebsite());
             return true;
         });
 
@@ -204,7 +208,8 @@ public abstract class JPlugin extends JavaPlugin
 
         //Load internal messages.
         YamlConfiguration internal;
-        internal = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
+        internal = YamlConfiguration.loadConfiguration(
+                new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
         for (Message m : messages)
         {
             if (internal.contains(m.getId())) m.set(internal.getString(m.getId(), m.get()));
@@ -253,11 +258,13 @@ public abstract class JPlugin extends JavaPlugin
         }
 
         //Prettify the Authors String for the Info Command, but only do it once.
-        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(), messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
+        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(),
+                messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
 
         if (this.periodicSave)
         {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::periodicSave, periodicSavePeriod, periodicSavePeriod);
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::periodicSave, periodicSavePeriod,
+                    periodicSavePeriod);
         }
     }
 

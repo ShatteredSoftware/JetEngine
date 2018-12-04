@@ -35,7 +35,8 @@ public class MessageSet implements Iterable<Message>
     @Override
     public String toString()
     {
-        return "MessageSet{" + "primaryColor='" + primaryColor + '\'' + ", secondaryColor='" + secondaryColor + '\'' + ", tertiaryColor='" + tertiaryColor + '\'' + ", messages=" + messages + '}';
+        return "MessageSet{" + "primaryColor='" + primaryColor + '\'' + ", secondaryColor='"
+                + secondaryColor + '\'' + ", tertiaryColor='" + tertiaryColor + '\'' + ", messages=" + messages + '}';
     }
 
     /**

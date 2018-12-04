@@ -69,21 +69,25 @@ public class Command extends BukkitCommand implements CommandExecutor
 
         this.setAliases(aliases);
 
-        this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
+        this.permission = (parent != null ? (parent.getPermission() + '.') :
+                (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
         messagePath = this.getMessagePath();
 
 
         //Default handling for feature name.
         if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name", "the /" + (parent != null ? parent.getPath(' ') + " " : "") + this.getLabel() + " command"));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name",
+                    "the /" + (parent != null ? parent.getPath(' ') + " " : "") +
+                            this.getLabel() + " command"));
         }
         this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
 
         //Default handling for description.
         if (!plugin.getMessages().hasMessage(messagePath + ".description"))
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".description", plugin.getName() + " " + this.feature_name.substring(4) + "."));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".description",
+                    plugin.getName() + " " + this.feature_name.substring(4) + "."));
         }
         this.description = plugin.getMessages().getMessage(messagePath + ".description");
 
@@ -98,7 +102,8 @@ public class Command extends BukkitCommand implements CommandExecutor
 
     private String getMessagePath()
     {
-        return (this.parent != null ? this.parent.getMessagePath() + "." : this.plugin.getName().toLowerCase() + "_cmd.") + this.label.toLowerCase();
+        return (this.parent != null ? this.parent.getMessagePath() + "." :
+                this.plugin.getName().toLowerCase() + "_cmd.") + this.label.toLowerCase();
     }
 
     public void addAlias(String name)
@@ -120,8 +125,10 @@ public class Command extends BukkitCommand implements CommandExecutor
         //Add help automatically if this is a child.
         if (!this.children.containsKey("help"))
         {
-            this.children.put("help", new Command(this.plugin, this, "help", (sender, unused1, unused2) -> sendCommandHelp(sender)));
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description", "Help for the " + this.feature_name));
+            this.children.put("help", new Command(this.plugin, this, "help",
+                    (sender, unused1, unused2) -> sendCommandHelp(sender)));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description",
+                    "Help for the " + this.feature_name));
         }
     }
 
@@ -202,7 +209,8 @@ public class Command extends BukkitCommand implements CommandExecutor
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String label, String[] args)
+    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command,
+                             String label, String[] args)
     {
         return execute(commandSender, label, args);
     }
