@@ -1,12 +1,12 @@
 package me.uberpilot.jetengine;
 
+import me.uberpilot.jetengine.util.JUtilities;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class TestJUtilities {
 

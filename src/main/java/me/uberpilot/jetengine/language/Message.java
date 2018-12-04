@@ -1,6 +1,6 @@
 package me.uberpilot.jetengine.language;
 
-import me.uberpilot.jetengine.JUtilities;
+import me.uberpilot.jetengine.util.JUtilities;
 
 @SuppressWarnings("WeakerAccess")
 public class Message
