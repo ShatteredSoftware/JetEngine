@@ -178,18 +178,26 @@ public abstract class JPlugin extends JavaPlugin
         //Load messages from files.
         YamlConfiguration cfg;
         File ext = new File(getDataFolder(), "messages.yml");
-        if (ext.exists()) cfg = YamlConfiguration.loadConfiguration(ext);
+        if (ext.exists())
+        {
+            cfg = YamlConfiguration.loadConfiguration(ext);
+        }
         else
+        {
             cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
+        }
 
         for (Message m : messages)
+        {
             if (cfg.contains(m.getId())) m.set(cfg.getString(m.getId(), m.get()));
+        }
 
         //Reflection shenanigans to register commands.
         try
         {
             final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
+            boolean isAccessible = cmdMap.isAccessible();
             cmdMap.setAccessible(true);
             commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
 
@@ -207,6 +215,7 @@ public abstract class JPlugin extends JavaPlugin
                 }
                 commandMap.register(command.getLabel(), command);
             }
+            cmdMap.setAccessible(isAccessible);
         }
         catch (NoSuchFieldException | IllegalAccessException e)
         {
@@ -262,16 +271,21 @@ public abstract class JPlugin extends JavaPlugin
      */
     protected void registerCommand(Command command) throws IllegalArgumentException
     {
-        if(command == null) throw new IllegalArgumentException("Command cannot be null.");
+        if(command == null)
+        {
+            throw new IllegalArgumentException("Command cannot be null.");
+        }
 
         try
         {
             final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
+            boolean isAccessible = cmdMap.isAccessible();
             cmdMap.setAccessible(true);
             commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
 
             commandMap.register(command.getLabel(), command);
+            cmdMap.setAccessible(isAccessible);
         }
         catch (NoSuchFieldException | IllegalAccessException e)
         {
