@@ -19,6 +19,32 @@ import java.util.List;
 
 /**
  * JPlugin. The core of the JetEngine plugin layer. Linked to message sets and includes utilities to translate messages.
+ * <br><br>
+ *
+ * Plugins extending this class should take the following form:<br><br>
+ *
+ * <pre>
+ * public class MyPlugin extends JPlugin
+ * {
+ *     public MyPlugin()
+ *     {
+ *         super("MyPlugin");
+ *     }
+ * }
+ * </pre>
+ * <br>
+ * Passing nulls to this class will result in an IllegalArgumentException unless otherwise stated.<br><br>
+ *
+ * JPlugin provides multiple methods to be overridden in order to do things in the proper order. Do not override
+ * {@link #onEnable()} or {@link #onDisable()}, but instead use the provided hooks.<br><br>
+ *
+ * {@link #preEnable()} is called before JPlugin handles registration and reading so that user-defined settings can be
+ * loaded and overridden.<br><br>
+ *
+ * {@link #postDisable()} is called after JPlugin handles deregistration and cleanup.<br><br>
+ *
+ * {@link #periodicSave()} is called every {@link #periodicSavePeriod user-defined period} if {@link #periodicSave} is
+ * enabled. <br><br>
  * @see me.uberpilot.jetengine.command.Command
  * @see me.uberpilot.jetengine.messenger.Messenger
  * @see me.uberpilot.jetengine.language.MessageSet
