@@ -69,10 +69,10 @@ public class JetEngine extends JPlugin
         }, "cmd");
 
         Command cmd_one = new Command(this, command, "one", ((sender, label, args) -> {
-            if(args.length == 0)
+            if(args.length < 1)
             {
-                messenger.sendErrorMessage(sender, "jetengine.command_not_found",
-                        String.join(" ", ""));
+                messenger.sendErrorMessage(sender, "jetengine.command_not_found", "");
+                return true;
             }
             for(Command c : commands.values())
             {

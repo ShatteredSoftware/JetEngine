@@ -90,8 +90,12 @@ public class Messenger
         {
             if(sender.hasPermission(entry.getValue().getPermission()))
             {
-                sendMessage(sender, "core.help_line", command.getPath(' ') + " " +
-                        entry.getValue().getLabel(), entry.getValue().getDescription());
+                //No aliases allowed.
+                if(entry.getKey().equalsIgnoreCase(entry.getValue().getLabel()))
+                {
+                    sendMessage(sender, "core.help_line", command.getPath(' ') + " " +
+                            entry.getValue().getLabel(), entry.getValue().getDescription());
+                }
             }
         }
     }

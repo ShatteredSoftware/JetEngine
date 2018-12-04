@@ -125,10 +125,10 @@ public class Command extends BukkitCommand implements CommandExecutor
         //Add help automatically if this is a child.
         if (!this.children.containsKey("help"))
         {
-            this.children.put("help", new Command(this.plugin, this, "help",
-                    (sender, unused1, unused2) -> sendCommandHelp(sender)));
             this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description",
-                    "Help for " + this.feature_name), true);
+                    "Help for " + this.feature_name + "."), true);
+            this.children.put("help", new Command(this.plugin, this, "help",
+                    (sender, unused1, unused2) -> sendCommandHelp(sender), "?"));
         }
     }
 
@@ -222,7 +222,7 @@ public class Command extends BukkitCommand implements CommandExecutor
 
     public String getDescription()
     {
-        return description;
+        return this.plugin.getMessages().getMessage(this.messagePath + ".description");
     }
 
     public void addChild(String label, Command command)
