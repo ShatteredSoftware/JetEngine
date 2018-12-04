@@ -15,10 +15,10 @@ public class JetEngine extends JPlugin
     protected void preEnable()
     {
         baseCommand.addAlias("je");
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message", "Lists the messages loaded in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one", "Displays a raw message in the JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command", "Displays a list of commands JetEngine registry."));
-        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one", "Displays a single command in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.desc", "Lists the messages loaded in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.message.one.desc", "Displays a raw message in the JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.desc", "Displays a list of commands JetEngine registry."));
+        messages.addMessage(new Message("jetengine_cmd.jetengine.command.one.desc", "Displays a single command in the JetEngine registry."));
         messages.addMessage(new Message("jetengine.message_list_item", "&f%s $tc- $sc%s"));
         messages.addMessage(new Message("jetengine.command_info", "$pc/%s $tc- [$sc%s$tc]\n    &fDescription: $sc%s"));
         messages.addMessage(new Message("jetengine.message_message_item", "&f%s $tc- &r%s $tc($scDefault: &r%s$tc)"));
@@ -58,6 +58,7 @@ public class JetEngine extends JPlugin
             return true;
         }, "cmd");
 
+        //TODO: Make me work with base aliases.
         Command cmd_one = new Command(this, command, "one", ((sender, label, args) -> {
             if(args.length == 0)
             {

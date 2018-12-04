@@ -70,7 +70,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         this.setAliases(aliases);
 
         this.permission = (parent != null ? (parent.getPermission() + '.') : (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
-        messagePath = (parent != null ? (parent.getPath('_')) : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase();
+        messagePath = (parent != null ? (parent.getPath('.') + '.') : (plugin.getName().toLowerCase() + "_cmd.")) + label.toLowerCase() + ".desc";
 
 
         //Default handling for feature name.
@@ -116,7 +116,7 @@ public class Command extends BukkitCommand implements CommandExecutor
         if (!this.children.containsKey("help"))
         {
             this.children.put("help", new Command(this.plugin, this, "help", (sender, unused1, unused2) -> sendCommandHelp(sender)));
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".help", "Help for the " + this.feature_name));
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.desc", "Help for the " + this.feature_name));
         }
     }
 

@@ -129,8 +129,8 @@ public abstract class JPlugin extends JavaPlugin
                         "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
         this.messages.addMessage(new Message("core.list_separator", ","));
         this.messages.addMessage(new Message("core.list_and", "and"));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + "", "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help", "Gives a list of commands from " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".desc", "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help.desc", "Gives a list of commands from " + name + "."));
 
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
