@@ -22,6 +22,9 @@ public abstract class JPlugin extends JavaPlugin
     protected HashMap<String, Command> commands;
     private CommandMap commandMap;
     protected boolean debug = false;
+    protected boolean reload = false;
+    protected boolean periodicSave = false;
+    protected long periodicSavePeriod = 12000L;
 
     private String authors;
     private final String name;
@@ -80,12 +83,15 @@ public abstract class JPlugin extends JavaPlugin
             return true;
         });
 
-        reloadCommand = new Command(this, baseCommand, "reload", ((sender, label, args) ->
+        if(this.reload)
         {
-            this.onDisable();
-            this.onEnable();
-            return true;
-        }));
+            reloadCommand = new Command(this, baseCommand, "reload", ((sender, label, args) ->
+            {
+                this.onDisable();
+                this.onEnable();
+                return true;
+            }));
+        }
         commands.put(name.toLowerCase(), baseCommand);
     }
 
@@ -100,14 +106,12 @@ public abstract class JPlugin extends JavaPlugin
         //Load messages from files.
         YamlConfiguration cfg;
         File ext = new File(getDataFolder(), "messages.yml");
-        if(ext.exists())
-            cfg = YamlConfiguration.loadConfiguration(ext);
+        if (ext.exists()) cfg = YamlConfiguration.loadConfiguration(ext);
         else
             cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(JPlugin.class.getResourceAsStream("/messages.yml")));
 
-        for(Message m : messages)
-            if(cfg.contains(m.getId()))
-                m.set(cfg.getString(m.getId(), m.get()));
+        for (Message m : messages)
+            if (cfg.contains(m.getId())) m.set(cfg.getString(m.getId(), m.get()));
 
         //Reflection shenanigans to register commands.
         try
@@ -117,9 +121,9 @@ public abstract class JPlugin extends JavaPlugin
             cmdMap.setAccessible(true);
             commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
 
-            for(Command command : commands.values())
+            for (Command command : commands.values())
             {
-                if(debug)
+                if (debug)
                 {
                     //Build child commands.
                     StringBuilder children = new StringBuilder(" {");
@@ -138,11 +142,17 @@ public abstract class JPlugin extends JavaPlugin
         }
 
         //Prettify the Authors String for the Info Command, but only do it once.
-        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(),
-                messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
+        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(), messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
+
+        if (this.periodicSave)
+        {
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::periodicSave, periodicSavePeriod, periodicSavePeriod);
+        }
     }
 
     protected void postDisable() {}
+
+    protected void periodicSave() {}
 
     @Override
     public void onDisable()
