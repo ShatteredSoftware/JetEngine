@@ -24,7 +24,7 @@ public abstract class JPlugin extends JavaPlugin
     protected boolean debug = false;
     protected boolean reload = false;
     protected boolean periodicSave = false;
-    protected long periodicSavePeriod = 12000L;
+    protected long periodicSavePeriod = 10 * 60 * 20;
 
     private String authors;
     private final String name;
