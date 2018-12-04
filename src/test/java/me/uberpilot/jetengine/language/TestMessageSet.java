@@ -85,7 +85,8 @@ public class TestMessageSet
     @Test
     public void testMessageSetRaw()
     {
-        Assert.assertEquals("Message Set: Get Default", "$scWelcome to $pcjetSuite$sc!", set.getRawMessage("def_msg"));
+        Assert.assertEquals("Message Set: Get Raw", "$scWelcome to $pcjetSuite$sc!", set.getRawMessage("def_msg"));
+        Assert.assertEquals("Message Set: Get Raw Default", set.getRawDefault("greeting"), "$scHello null!");
     }
 
     @Test

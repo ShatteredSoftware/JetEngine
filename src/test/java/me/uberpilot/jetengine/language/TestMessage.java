@@ -25,6 +25,7 @@ public class TestMessage
     public void testMessageValid()
     {
         Assert.assertEquals("Get Value, Valid", "&6Hello World!", message.get());
+        Assert.assertEquals("Get Value, Valid", "&7Default Hello!", message.getDefault());
         Assert.assertEquals("Get Value, Empty Default", "&6Hello World!", message.getOrDef("&8Hello!"));
     }
 
