@@ -5,13 +5,18 @@ import java.util.List;
 /**
  * A class of general utilities for use in JetEngine plugins. 
  * @author Hunter Henrichsen
- * @since 1.1
+ * @since 1.0
  */
 @SuppressWarnings("WeakerAccess")
 public final class JUtilities
 {
     private JUtilities() {}
 
+    /**
+     * Alias for {@link JUtilities#punctuateList(List, String, String)}.
+     * @param list The list of strings to punctuate.
+     * @return A single punctuated string.
+     */
     public static String punctuateList(List<? extends String> list)
     {
         return punctuateList(list, ",", "and");
