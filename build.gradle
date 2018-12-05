@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import de.undercouch.gradle.tasks.download.Download
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -32,6 +33,7 @@ apply plugin: 'idea-utils'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: "jacoco"
+apply plugin: 'com.github.johnrengelman.shadow'
 //apply plugin: 'findbugs'
 
 idea {
@@ -65,10 +67,6 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.7.0'
     testCompile 'org.powermock:powermock-core:1.7.0'
     testCompile 'org.powermock:powermock-module-junit4-rule:1.7.0'
-
-    // dependencies go here
-    // Example:
-    // compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
 publishing {
@@ -113,20 +111,6 @@ jacocoTestReport {
 compileJava.dependsOn {
 //    check
     buildSpigot
-}
-
-jar {
-    actions = []
-    dependsOn = []
-    dependsOn('shadowJar')
-}
-
-shadowJar {
-    shadowJar.archiveName = "JetEngine-${version}.jar"
-    dependencies {
-        exclude(dependency('org.spigotmc:spigot-api:.*'))
-        exclude(dependency('org.spigotmc:spigot:.*'))
-    }
 }
 
 task sourcesJar(type: Jar) {
