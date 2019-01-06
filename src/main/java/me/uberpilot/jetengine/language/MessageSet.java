@@ -100,6 +100,7 @@ public class MessageSet implements Iterable<Message>
      */
     public String getMessage(String id, Object... vars)
     {
+        final String prefixPath = "core.prefix";
         Message m = messages.get(id);
         if(m == null) throw new IllegalArgumentException("Invalid message: " + id);
         String message = String.format(m.get(), vars)
@@ -107,11 +108,29 @@ public class MessageSet implements Iterable<Message>
             .replaceAll("\\$sc", secondaryColor)
             .replaceAll("\\$tc", tertiaryColor);
         message = ChatColor.translateAlternateColorCodes('&', message);
-        if(messages.containsKey("core.prefix") && !id.equals("core.prefix"))
+        if(messages.containsKey(prefixPath) && !id.equals(prefixPath))
         {
-            message = message.replaceAll("\\$pre", getMessage("core.prefix"));
+            message = message.replaceAll("\\$pre", getMessage(prefixPath));
         }
         return message;
+    }
+
+    /**
+     * Remove a message from the set.
+     * @param id The ID of the message to remove.
+     * @return Whether the message existed.
+     */
+    public boolean removeMessage(String id)
+    {
+        if(messages.containsKey(id))
+        {
+            messages.remove(id);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**

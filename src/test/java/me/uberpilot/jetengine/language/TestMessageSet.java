@@ -31,11 +31,18 @@ public class TestMessageSet
         set.addMessage(new Message("core.prefix",""));
         set.addMessage(new Message("greeting", "$scHello, $pc%s$sc!", "$scHello null!"));
         set.addMessage(new Message("def_msg", "", "$scWelcome to $pcjetSuite$sc!"));
+        clearSet.addMessage(new Message("clearme", "x", "x"));
         clearSet.addMessage(new Message("greeting", "$scHello, $pc%s$sc!", "$scHello null!"));
         clearSet.addMessage(new Message("def_msg", "", "$scWelcome to $pcjetSuite$sc!"));
         setColors.addMessage(new Message("core.prefix",""));
         setColors.addMessage(new Message("greeting", "$scHello, $pc%s$sc!", "$scHello null!"));
         setColors.addMessage(new Message("def_msg", "", "$scWelcome to $pcjetSuite$sc!"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNonexistentMessage()
+    {
+        set.getMessage("not_a_message");
     }
 
     @Test
@@ -86,7 +93,7 @@ public class TestMessageSet
     public void testMessageSetRaw()
     {
         Assert.assertEquals("Message Set: Get Raw", "$scWelcome to $pcjetSuite$sc!", set.getRawMessage("def_msg"));
-        Assert.assertEquals("Message Set: Get Raw Default", set.getRawDefault("greeting"), "$scHello null!");
+        Assert.assertEquals("Message Set: Get Raw Default", "$scHello null!", set.getRawDefault("greeting"));
     }
 
     @Test
@@ -128,8 +135,10 @@ public class TestMessageSet
     }
 
     @Test
-    public void testMessageSetClear()
+    public void testMessageSetRemoving()
     {
+        Assert.assertTrue(clearSet.removeMessage("clearme"));
+        Assert.assertFalse(clearSet.removeMessage("no_message_here"));
         clearSet.clear();
         Assert.assertFalse("Clear",  clearSet.iterator().hasNext());
     }
