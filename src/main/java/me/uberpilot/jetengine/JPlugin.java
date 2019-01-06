@@ -43,7 +43,7 @@ import java.util.List;
  *
  * {@link #postDisable()} is called after JPlugin handles deregistration and cleanup.<br><br>
  *
- * {@link #periodicSave()} is called every {@link #periodicSavePeriod user-defined period} if {@link #periodicSave} is
+ * {@link #periodicSave()} is called every {@link #periodicSavePeriod user-defined period} if {@link #doesPeriodicSave} is
  * enabled. <br><br>
  * @see me.uberpilot.jetengine.command.Command
  * @see me.uberpilot.jetengine.messenger.Messenger
@@ -87,12 +87,12 @@ public abstract class JPlugin extends JavaPlugin
      * <b>User feature toggle:</b> Periodic saving. <br>
      * <i>If periodic saving should be run at all.</i>
      * */
-    protected boolean periodicSave = false;
+    protected boolean doesPeriodicSave = false;
     /**
      * <b>User feature setting:</b> Periodic saving period. <br>
      * <i>How often the save task should be run.</i>
      * */
-    protected long periodicSavePeriod = 10 * 60 * 20;
+    protected long periodicSavePeriod = (long) 10 * 60 * 20;
 
     private String authors;
     private final String name;
@@ -137,31 +137,15 @@ public abstract class JPlugin extends JavaPlugin
     /**
      * Creates default messages and commands.
      * @see JPlugin#onEnable()
-     * @param name The name of the plugin.
      */
-    private void init(String name)
+    private void init()
     {
-        //Create messages and defaults.
-        this.messages.addMessage(new Message("core.prefix", "$sc[$pc" + name + "$sc]"));
-        this.messages.addMessage(new Message("core.no_permission",
-                "$pre &cYou don't have permission to use %s."));
-        this.messages.addMessage(new Message("core.invalid_args", "$pre &cInvalid argument."));
-        this.messages.addMessage(new Message("core.help_line", "  $pc/%s $tc- $sc%s"));
-        this.messages.addMessage(new Message("core.help_header", "$scHelp for $pc%s$sc:"));
-        this.messages.addMessage(new Message("core.cmd_help_header", "$sc%s Help$tc - $pc/%s"));
-        this.messages.addMessage(new Message("core.info",
-                "$tc&m--------------------------------------\n" +
-                        "$pc%s-%s $scby $pc%s\n" +
-                        "$tc&m--------------------------------------\n" +
-                        "$pcWebsite$tc: $sc%s\n" +
-                        "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
-        this.messages.addMessage(new Message("core.list_separator", ","));
-        this.messages.addMessage(new Message("core.list_and", "and"));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".description",
-                "Gives basic information about " + name + "."));
-        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help.description",
-                "Gives a list of commands from " + name + "."));
+        initMessages();
+        initCommands();
+    }
 
+    private void initCommands()
+    {
         //Create and register the Info command.
         baseCommand = new Command(this, null, name.toLowerCase(), (sender, label, args) ->
         {
@@ -192,6 +176,30 @@ public abstract class JPlugin extends JavaPlugin
         commands.put(name.toLowerCase(), baseCommand);
     }
 
+    private void initMessages()
+    {
+        //Create messages and defaults.
+        this.messages.addMessage(new Message("core.prefix", "$sc[$pc" + name + "$sc]"));
+        this.messages.addMessage(new Message("core.no_permission",
+                "$pre &cYou don't have permission to use %s."));
+        this.messages.addMessage(new Message("core.invalid_args", "$pre &cInvalid argument."));
+        this.messages.addMessage(new Message("core.help_line", "  $pc/%s $tc- $sc%s"));
+        this.messages.addMessage(new Message("core.help_header", "$scHelp for $pc%s$sc:"));
+        this.messages.addMessage(new Message("core.cmd_help_header", "$sc%s Help$tc - $pc/%s"));
+        this.messages.addMessage(new Message("core.info",
+                "$tc&m--------------------------------------\n" +
+                        "$pc%s-%s $scby $pc%s\n" +
+                        "$tc&m--------------------------------------\n" +
+                        "$pcWebsite$tc: $sc%s\n" +
+                        "$tcUse $sc/" + name.toLowerCase() + " help $tcfor a list of commands."));
+        this.messages.addMessage(new Message("core.list_separator", ","));
+        this.messages.addMessage(new Message("core.list_and", "and"));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".description",
+                "Gives basic information about " + name + "."));
+        this.messages.addMessage(new Message(name.toLowerCase() + "_cmd." + name.toLowerCase() + ".help.description",
+                "Gives a list of commands from " + name + "."));
+    }
+
     /**
      * Bukkit overridden onEnable method.<br>
      * <b>Note: Uses Reflection</b>
@@ -202,10 +210,69 @@ public abstract class JPlugin extends JavaPlugin
     public void onEnable()
     {
         //Add commands, read messages, etc.
-        init(this.name);
+        init();
 
         preEnable();
 
+        //Load Messages from files, in cascading order.
+        loadMessages();
+        //Register commands. Uses reflection.
+        registerCommands();
+
+        //Prettify the Authors String for the Info Command, but only do it once.
+        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(),
+                messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
+
+        //Schedule saving.
+        if (this.doesPeriodicSave)
+        {
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::periodicSave, periodicSavePeriod,
+                    periodicSavePeriod);
+        }
+    }
+
+    /**
+     * Registers commands to the bukkit command map.
+     * <b>Note: Uses Reflection</b>
+     */
+    private void registerCommands()
+    {
+        //Reflection shenanigans to register commands.
+        try
+        {
+            final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+            boolean isAccessible = cmdMap.isAccessible();
+            cmdMap.setAccessible(true);
+            commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
+
+            for (Command command : commands.values())
+            {
+                if (debug)
+                {
+                    //Build child commands.
+                    StringBuilder children = new StringBuilder(" {");
+                    for (Command child : command.getChildren().values())
+                        children.append(child.getLabel()).append(", ");
+                    children.delete(children.length() - 2, children.length()).append("}");
+                    //Show this and children.
+                    getLogger().info(() -> "Registering command /" + command.getLabel() + children.toString());
+                }
+                commandMap.register(command.getLabel(), command);
+            }
+            cmdMap.setAccessible(isAccessible);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e)
+        {
+            getLogger().severe(e.getMessage());
+        }
+    }
+
+    /**
+     * Cascading-message reading to load strings.
+     */
+    private void loadMessages()
+    {
         //Load internal messages.
         YamlConfiguration internal;
         internal = YamlConfiguration.loadConfiguration(
@@ -226,46 +293,6 @@ public abstract class JPlugin extends JavaPlugin
                 if (cfg.contains(m.getId())) m.set(cfg.getString(m.getId(), m.get()));
             }
         }
-
-        //Reflection shenanigans to register commands.
-        try
-        {
-            final Field cmdMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-
-            boolean isAccessible = cmdMap.isAccessible();
-            cmdMap.setAccessible(true);
-            commandMap = (CommandMap) cmdMap.get(Bukkit.getServer());
-
-            for (Command command : commands.values())
-            {
-                if (debug)
-                {
-                    //Build child commands.
-                    StringBuilder children = new StringBuilder(" {");
-                    for (Command child : command.getChildren().values())
-                        children.append(child.getLabel()).append(", ");
-                    children.delete(children.length() - 2, children.length()).append("}");
-                    //Show this and children.
-                    getLogger().info("Registering command /" + command.getLabel() + children.toString());
-                }
-                commandMap.register(command.getLabel(), command);
-            }
-            cmdMap.setAccessible(isAccessible);
-        }
-        catch (NoSuchFieldException | IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
-
-        //Prettify the Authors String for the Info Command, but only do it once.
-        this.authors = JUtilities.punctuateList(this.getDescription().getAuthors(),
-                messages.getMessage("core.list_separator"), messages.getMessage("core.list_and"));
-
-        if (this.periodicSave)
-        {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::periodicSave, periodicSavePeriod,
-                    periodicSavePeriod);
-        }
     }
 
     /**
@@ -275,7 +302,7 @@ public abstract class JPlugin extends JavaPlugin
      * @see Command#Command(JPlugin, Command, String, JCommandExecutor, List)
      * @throws IllegalArgumentException Null commands are not allowed.
      */
-    protected void registerCommand(Command command) throws IllegalArgumentException
+    protected void registerCommand(Command command)
     {
         if(command == null)
         {
@@ -295,7 +322,7 @@ public abstract class JPlugin extends JavaPlugin
         }
         catch (NoSuchFieldException | IllegalAccessException e)
         {
-            e.printStackTrace();
+            getLogger().severe(e.getMessage());
         }
     }
 

@@ -2,10 +2,16 @@ package me.uberpilot.jetengine;
 
 import me.uberpilot.jetengine.command.Command;
 import me.uberpilot.jetengine.language.Message;
+import org.bukkit.command.CommandSender;
 
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings("UnusedDeclaration WeakerAccess")
 public class JetEngine extends JPlugin
 {
+    protected Command messageList;
+    protected Command messageOne;
+    protected Command commandList;
+    protected Command commandOne;
+
     public JetEngine()
     {
         super("JetEngine");
@@ -13,6 +19,13 @@ public class JetEngine extends JPlugin
 
     @Override
     protected void preEnable()
+    {
+        createMessages();
+        createMessageCommands();
+        createCommandCommands();
+    }
+
+    private void createMessages()
     {
         baseCommand.addAlias("je");
         messages.addMessage(new Message("jetengine_cmd.jetengine.message.description",
@@ -33,8 +46,11 @@ public class JetEngine extends JPlugin
                 "$pre &cMessage '&f%s&c' Not Found."));
         messages.addMessage(new Message("jetengine.command_not_found",
                 "$pre &cCommand '&f/%s&c' Not Found."));
+    }
 
-        Command message = new Command(this, baseCommand, "message", ((sender, label, args) ->
+    private void createMessageCommands()
+    {
+        messageList = new Command(this, baseCommand, "message", ((sender, label, args) ->
         {
             for(Message m : messages)
             {
@@ -43,7 +59,7 @@ public class JetEngine extends JPlugin
             return true;
         }), "msg");
 
-        Command msg_one = new Command(this, message, "one", ((sender, label, args) ->
+        messageOne = new Command(this, messageList, "one", ((sender, label, args) ->
         {
             String param = String.join(" ", args);
             if(messages.hasMessage(param))
@@ -58,56 +74,72 @@ public class JetEngine extends JPlugin
             }
             return true;
         }));
+    }
 
-        Command command = new Command(this, baseCommand, "command", (sender, label, args) -> {
+    private void createCommandCommands()
+    {
+        commandList = new Command(this, baseCommand, "command", (sender, label, args) -> {
             for(Command c : commands.values())
             {
-                messenger.sendMessage(sender, "jetengine.command_info", c.getLabel(), c.getPermission(),
-                        c.getDescription());
+                sendCommandInfo(sender, c);
             }
             return true;
         }, "cmd");
 
-        Command cmd_one = new Command(this, command, "one", ((sender, label, args) -> {
+        commandOne = new Command(this, commandList, "one", ((sender, label, args) -> {
             if(args.length < 1)
             {
-                messenger.sendErrorMessage(sender, "jetengine.command_not_found", "");
-                return true;
+                return sendCommandNotFound(sender, args);
             }
             for(Command c : commands.values())
             {
                 if (c.getLabel().equalsIgnoreCase(args[0]) || c.getAliases().contains(args[0]))
                 {
-                    Command current = c;
-                    for (int i = 1; i < args.length; i++)
-                    {
-                        if (current.getChildren().containsKey(args[i]))
-                        {
-                            if (sender.hasPermission(current.getChildren().get(args[i]).getPermission()))
-                            {
-                                current = current.getChildren().get(args[i]);
-                            }
-                            else
-                            {
-                                messenger.sendErrorMessage(sender, "jetengine.command_not_found",
-                                        String.join(" ", args));
-                                return true;
-                            }
-                        }
-                        else
-                        {
-                            messenger.sendErrorMessage(sender, "jetengine.command_not_found",
-                                    String.join(" ", args));
-                            return true;
-                        }
-                    }
-                    messenger.sendMessage(sender, "jetengine.command_info", current.getPath(' '),
-                            current.getPermission(), current.getDescription());
-                    return true;
+                    Command current = consumeArgs(sender, c, args);
+                    if(current != null)
+                        sendCommandInfo(sender, current);
                 }
             }
-            messenger.sendErrorMessage(sender, "jetengine.command_not_found", String.join(" ", args));
-            return true;
+            return sendCommandNotFound(sender, args);
         }));
+    }
+
+    private Command consumeArgs(CommandSender sender, Command current, String[] args)
+    {
+        for (int i = 1; i < args.length; i++)
+        {
+            if (current.getChildren().containsKey(args[i]))
+            {
+                if (sender.hasPermission(current.getChildren().get(args[i]).getPermission()))
+                {
+                    current = current.getChildren().get(args[i]);
+                }
+                else
+                {
+                    sendCommandNotFound(sender, args);
+                    return null;
+                }
+            }
+            else
+            {
+                sendCommandNotFound(sender, args);
+                return null;
+            }
+        }
+        return current;
+    }
+
+    private boolean sendCommandNotFound(CommandSender sender, String[] args)
+    {
+        messenger.sendErrorMessage(sender, "jetengine.command_not_found",
+                String.join(" ", args));
+        return true;
+    }
+
+    private boolean sendCommandInfo(CommandSender sender, Command c)
+    {
+        messenger.sendMessage(sender, "jetengine.command_info", c.getLabel(), c.getPermission(),
+                c.getDescription());
+        return true;
     }
 }
