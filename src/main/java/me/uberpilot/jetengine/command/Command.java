@@ -2,6 +2,7 @@ package me.uberpilot.jetengine.command;
 
 import me.uberpilot.jetengine.JPlugin;
 import me.uberpilot.jetengine.language.Message;
+import me.uberpilot.jetengine.util.JUtilities;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a command and information attached to it.
@@ -17,28 +19,24 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess UnusedDeclaration")
 public class Command extends BukkitCommand implements CommandExecutor
 {
-    private final String messagePath;
     /** Link to the plugin this belongs to. */
-    private JPlugin plugin;
-
+    private final JPlugin plugin;
+    /** Child commands. */
+    private final HashMap<String, Command> children;
+    /** Name of the command. */
+    private final String label;
     /** Parent command. */
     private Command parent;
-
-    /** Child commands. */
-    private HashMap<String, Command> children;
-
-    /** Name of the command. */
-    private String label;
-
     /** Permission to be checked before viewing or executing the command */
     private String permission;
 
-    private String feature_name;
+    private String messagePath;
 
-    /** Description of the command and its functionality. Taken from the plugin's
-     * {@link me.uberpilot.jetengine.language.MessageSet MessageSet} from {@link JPlugin#messages}
-     */
-    private String description;
+    private String descriptionPath;
+
+    private String featurePath;
+
+    private String featureName;
 
     private JCommandExecutor executor;
 
@@ -57,8 +55,11 @@ public class Command extends BukkitCommand implements CommandExecutor
         super(label);
 
         //Check for nulls for plugin and for label.
-        if(plugin == null) throw new IllegalArgumentException("Commands: Parent plugin cannot be null.");
-        if(label == null) throw new IllegalArgumentException("Commands: Label cannot be null.");
+        if(plugin == null)
+            throw new IllegalArgumentException("Commands: Parent plugin cannot be null.");
+        if(JUtilities.isEmptyOrNull(label))
+            throw new IllegalArgumentException("Commands: Label cannot be empty or null.");
+
 
         //Basic value-setting.
         this.plugin = plugin;
@@ -69,28 +70,6 @@ public class Command extends BukkitCommand implements CommandExecutor
 
         this.setAliases(aliases);
 
-        this.permission = (parent != null ? (parent.getPermission() + '.') :
-                (plugin.getName().toLowerCase() + '.')) + label.toLowerCase();
-        messagePath = this.getMessagePath();
-
-
-        //Default handling for feature name.
-        if (!plugin.getMessages().hasMessage(messagePath + ".feature_name"))
-        {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".feature_name",
-                    "the /" + (parent != null ? parent.getPath(' ') + " " : "") +
-                            this.getLabel() + " command"));
-        }
-        this.feature_name = plugin.getMessages().getMessage(messagePath + ".feature_name");
-
-        //Default handling for description.
-        if (!plugin.getMessages().hasMessage(messagePath + ".description"))
-        {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".description",
-                    plugin.getName() + " " + this.feature_name.substring(4) + "."));
-        }
-        this.description = plugin.getMessages().getMessage(messagePath + ".description");
-
         //Hook this to the parent.
         if(parent != null)
         {
@@ -98,79 +77,110 @@ public class Command extends BukkitCommand implements CommandExecutor
             this.parent.createHelpCommand();
             aliases.forEach(e -> parent.addChild(e, this));
         }
+
+        init();
     }
 
-    private String getMessagePath()
+    private void init()
     {
-        return (this.parent != null ? this.parent.getMessagePath() + "." :
-                this.plugin.getName().toLowerCase() + "_cmd.") + this.label.toLowerCase();
+        this.permission = defaultPermission();
+        this.messagePath = defaultMessagePath();
+        this.descriptionPath = messagePath + ".description";
+        this.featurePath = messagePath + ".feature_name";
+        this.featureName = defaultFeatureName();
+        this.description = defaultDescription();
     }
 
-    public void addAlias(String name)
+    /**
+     * Initializes the path to messages for this command recursively.<br>
+     *
+     * <b>Example:</b> For a plugin named Example, with a command labeled parent, and a child command labeled <br>
+     * child, the message path for the child would be <code>"example_cmd.parent.child"</code>.
+     *
+     * @return The path to messages for this command.
+     */
+    private String defaultMessagePath()
     {
-        if(this.parent != null)
+        if (this.parent != null)
         {
-            this.parent.addChild(name, this);
+            return this.parent.messagePath + "." + this.label.toLowerCase();
         }
-        this.getAliases().add(name);
-    }
-
-    public void addAliases(String... aliases)
-    {
-        Arrays.stream(aliases).forEach(this::addAlias);
-    }
-
-    private void createHelpCommand()
-    {
-        //Add help automatically if this is a child.
-        if (!this.children.containsKey("help"))
+        else
         {
-            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description",
-                    "Help for " + this.feature_name + "."), true);
-            this.children.put("help", new Command(this.plugin, this, "help",
-                    (sender, unused1, unused2) -> sendCommandHelp(sender), "?"));
+            return this.plugin.getName().toLowerCase() + "_cmd." + this.label.toLowerCase();
         }
     }
 
-    public String getPath(String separator)
+    /**
+     * Default permission handling.<br><br>
+     *
+     * <b>Example: </b> For a plugin named Example, with a command labeled parent, and a child command labeled <br>
+     * child, the permission for the child would be <code>"example.parent.child"</code>.
+     *
+     * @return The default permission.
+     */
+    private String defaultPermission()
     {
-        return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
+        if (parent != null)
+        {
+            return parent.permission + '.' + label.toLowerCase();
+        }
+        else
+        {
+            return plugin.getName().toLowerCase() + '.' + label.toLowerCase();
+        }
     }
 
-    public String getPath(char separator)
+
+    /**
+     * Default handling for creating a feature name.<br><br>
+     *
+     * <b>Example: </b> For a plugin named Example, with a command labeled parent, and a child command labeled <br>
+     * child, the default feature name for the child would be <code>"the /parent child command"</code>.
+     *
+     * @return Either a default feature name or the one loaded from the attached
+     * {@link me.uberpilot.jetengine.language.MessageSet MessageSet}.
+     */
+    private String defaultFeatureName()
     {
-        return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
+        if (!plugin.getMessages().hasMessage(featurePath))
+        {
+            if (parent != null)
+            {
+                this.plugin.getMessages().addMessage(new Message(featurePath, "the /" + (parent.getPath(' ') + " ") + this.getLabel() + " command"));
+            }
+            else
+            {
+                this.plugin.getMessages().addMessage(new Message(featurePath, "the /"  + this.getLabel() + " command"));
+            }
+        }
+        return plugin.getMessages().getMessage(featurePath);
     }
 
-    private void sendNoPermissionMessage(CommandSender sender)
+    /**
+     * Default handling for creating a description.<br><br>
+     *
+     * <b>Example: </b> For a plugin named Example, with a command labeled parent, and a child command labeled <br>
+     * child, the default description for the child would be <code>"Example /parent child command."</code>.
+     *
+     * @return Either a default description or the one loaded from the attached
+     * {@link me.uberpilot.jetengine.language.MessageSet MessageSet}.
+     */
+    private String defaultDescription()
     {
-        plugin.getMessenger().sendErrorMessage(sender, "core.no_permission", this.feature_name);
+        if (!plugin.getMessages().hasMessage(descriptionPath))
+        {
+            this.plugin.getMessages().addMessage(new Message(descriptionPath,
+                    plugin.getName() + " " + this.featureName.substring(4) + "."));
+        }
+        return plugin.getMessages().getMessage(descriptionPath);
     }
 
-    private boolean sendCommandHelp(CommandSender sender)
+    @Override
+    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command,
+                             String label, String[] args)
     {
-        plugin.getMessenger().sendCommandHelp(sender, this);
-        return true;
-    }
-
-    public Command getParent()
-    {
-        return parent;
-    }
-
-    public HashMap<String, Command> getChildren()
-    {
-        return children;
-    }
-
-    public String getLabel()
-    {
-        return label;
-    }
-
-    public String getFeatureName()
-    {
-        return feature_name;
+        return execute(commandSender, label, args);
     }
 
     @Override
@@ -209,25 +219,52 @@ public class Command extends BukkitCommand implements CommandExecutor
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command,
-                             String label, String[] args)
-    {
-        return execute(commandSender, label, args);
-    }
-
     public String getPermission()
     {
         return permission;
     }
 
-    public String getDescription()
+    @Override
+    public String getLabel()
     {
-        return this.plugin.getMessages().getMessage(this.messagePath + ".description");
+        return label;
     }
 
-    public void addChild(String label, Command command)
+    @Override
+    public String getDescription()
     {
-        this.children.put(label, command);
+        return this.plugin.getMessages().getMessage(descriptionPath);
+    }
+
+    @Override
+    public org.bukkit.command.Command setDescription(String description)
+    {
+        this.description = description;
+        plugin.getMessages().set(descriptionPath, description);
+        return this;
+    }
+
+    private void createHelpCommand()
+    {
+        //Add help automatically if this is a child.
+        if (!this.children.containsKey("help"))
+        {
+            this.plugin.getMessages().addMessage(new Message(messagePath + ".help.description",
+                    "Help for " + this.featureName + "."), true);
+            this.children.put("help", new Command(this.plugin, this, "help",
+                    (sender, unused1, unused2) -> sendCommandHelp(sender), "?"));
+        }
+    }
+
+    private void sendNoPermissionMessage(CommandSender sender)
+    {
+        plugin.getMessenger().sendErrorMessage(sender, "core.no_permission", this.featureName);
+    }
+
+    private boolean sendCommandHelp(CommandSender sender)
+    {
+        plugin.getMessenger().sendCommandHelp(sender, this);
+        return true;
     }
 
     public void addChild(Command command)
@@ -240,14 +277,59 @@ public class Command extends BukkitCommand implements CommandExecutor
         for(Command command : commands)
         {
             addChild(command);
+            command.setParent(this);
         }
     }
 
-    @Override
-    public org.bukkit.command.Command setDescription(String description)
+    public void addAlias(String name)
     {
-        this.description = description;
-        plugin.getMessages().set(messagePath + ".description", description);
-        return this;
+        if(this.parent != null)
+        {
+            this.parent.addChild(name, this);
+        }
+        this.getAliases().add(name);
+    }
+
+    public void addChild(String label, Command command)
+    {
+        this.children.put(label, command);
+    }
+
+    public void addAliases(String... aliases)
+    {
+        Arrays.stream(aliases).forEach(this::addAlias);
+    }
+
+    public Command getParent()
+    {
+        return parent;
+    }
+
+    private void setParent(Command command)
+    {
+        this.parent = command;
+        this.init();
+        this.parent.createHelpCommand();
+        getAliases().forEach(e -> parent.addChild(e, this));
+    }
+
+    public Map<String, Command> getChildren()
+    {
+        return children;
+    }
+
+    public String getFeatureName()
+    {
+        return plugin.getMessages().getMessage(featurePath);
+    }
+
+    public String getPath(String separator)
+    {
+        return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
+    }
+
+    public String getPath(char separator)
+    {
+        return (this.parent != null ? this.parent.getPath(separator) + separator : "") + this.getLabel();
     }
 }
