@@ -10,9 +10,10 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
+@SuppressWarnings("WeakerAccess")
 public class Messenger
 {
-    private transient JPlugin plugin;
+    private JPlugin plugin;
     private MessageSet messages;
 
     /**
@@ -34,13 +35,13 @@ public class Messenger
      */
     public void sendMessage(CommandSender sender, String id, Object... vars)
     {
-        if(sender != null)
+        if(sender == null)
+            throw new IllegalArgumentException("Sender cannot be null.");
+
+        String message = messages.getMessage(id, vars);
+        if(message.length() > 0)
         {
-            String message = messages.getMessage(id, vars);
-            if(message != null && message.length() != 0)
-            {
-                sender.sendMessage(message);
-            }
+            sender.sendMessage(message);
         }
     }
 
@@ -88,14 +89,12 @@ public class Messenger
         sendMessage(sender, "core.help_line", command.getPath(' '), command.getDescription());
         for(HashMap.Entry<String, Command> entry : command.getChildren().entrySet())
         {
-            if(sender.hasPermission(entry.getValue().getPermission()))
+            //No aliases allowed.
+            if(entry.getKey().equalsIgnoreCase(entry.getValue().getLabel())
+                    && sender.hasPermission(entry.getValue().getPermission()))
             {
-                //No aliases allowed.
-                if(entry.getKey().equalsIgnoreCase(entry.getValue().getLabel()))
-                {
                     sendMessage(sender, "core.help_line", command.getPath(' ') + " " +
                             entry.getValue().getLabel(), entry.getValue().getDescription());
-                }
             }
         }
     }
