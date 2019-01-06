@@ -97,7 +97,7 @@ public class JetEngine extends JPlugin
                 {
                     Command current = consumeArgs(sender, c, args);
                     if(current != null)
-                        sendCommandInfo(sender, current);
+                        return sendCommandInfo(sender, current);
                 }
             }
             return sendCommandNotFound(sender, args);
