@@ -1,4 +1,5 @@
 package me.uberpilot.jetengine.util;
+
 /**
  * Version independent spigot sounds.
  *
@@ -7,7 +8,9 @@ package me.uberpilot.jetengine.util;
  * @author Nikl
  * @author MrBlobman
  */
-public enum Sound {
+public enum Sound
+{/**/
+    ITEM_TRIDENT_THROW("ITEM_TRIDENT_THROW"),
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
     AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN"),
     AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER", "ENTITY_LIGHTNING_BOLT_THUNDER"),
@@ -206,7 +209,8 @@ public enum Sound {
     private String[] versionDependentNames;
     private org.bukkit.Sound cached = null;
 
-    Sound(String... versionDependentNames) {
+    Sound(String... versionDependentNames)
+    {
         this.versionDependentNames = versionDependentNames;
     }
 
@@ -216,12 +220,21 @@ public enum Sound {
      * Caches sound on first call
      * @return corresponding {@link org.bukkit.Sound}
      */
-    public org.bukkit.Sound bukkitSound() {
-        if (cached != null) return cached;
-        for (String name : versionDependentNames) {
-            try {
-                return cached = org.bukkit.Sound.valueOf(name);
-            } catch (IllegalArgumentException ignore2) {
+    public org.bukkit.Sound bukkitSound()
+    {
+        if (cached != null)
+        {
+            return cached;
+        }
+        for (String name : versionDependentNames)
+        {
+            try
+            {
+                cached = org.bukkit.Sound.valueOf(name);
+                return cached;
+            }
+            catch (IllegalArgumentException ignore2)
+            {
                 // try next
             }
         }
