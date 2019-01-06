@@ -1,12 +1,14 @@
-package me.uberpilot.jetengine;
+package me.uberpilot.jetengine.util;
 
-import me.uberpilot.jetengine.util.JUtilities;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class TestJUtilities {
 
@@ -31,12 +33,20 @@ public class TestJUtilities {
     }
 
     @Test
+    public void testConstructor() throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+    {
+        Constructor<?> constructor = JUtilities.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Assert.assertNotNull(constructor.newInstance());
+    }
+
+    @Test
     public void testPunctuateListNormal()
     {
         Assert.assertEquals("Expect empty string for null list to punctuate.",  "", JUtilities.punctuateList(nullList));
         Assert.assertEquals("Expect empty string for empty list to punctuate.",  "", JUtilities.punctuateList(emptyStrings));
         Assert.assertEquals("Expect properly punctuated list.", "Thing 1, Thing 2, and Thing 3", JUtilities.punctuateList(strings));
-        Assert.assertEquals("Expect properly punctuated list.", "One", JUtilities.punctuateList(Arrays.asList("One")));
+        Assert.assertEquals("Expect properly punctuated list.", "One", JUtilities.punctuateList(Collections.singletonList("One")));
         Assert.assertEquals("Expect properly punctuated list.", "One, and Two", JUtilities.punctuateList(Arrays.asList("One", "Two")));
         Assert.assertEquals("Expect properly punctuated translated list.", "Cosa 1, Cosa 2, y Cosa 3", JUtilities.punctuateList(langStrings, ",", "y"));
     }
