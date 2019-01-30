@@ -40,6 +40,7 @@ public class TestMessenger
     BukkitScheduler scheduler;
     Messenger msgr;
     Command cmd;
+    Command chld;
     private static final String name = "TestPlugin";
 
     @Before
@@ -71,6 +72,7 @@ public class TestMessenger
                 .thenReturn(name);
 
         cmd = new Command(plugin, null, "cmd", (a, b, c) -> true, "c");
+        chld = new Command(plugin, cmd, "chld", (a, b, c) -> true, "ch");
         msgr = new Messenger(plugin, set);
     }
 
